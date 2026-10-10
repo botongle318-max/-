@@ -161,6 +161,20 @@ try {
   await offlineContext.close()
   check('no browser runtime exceptions', errors.length === 0)
   console.log(`Completed ${checks} production browser checks.`)
+} catch (error) {
+  if (process.env.GITHUB_ACTIONS === 'true') {
+    let diagnostic = error instanceof Error ? (error.stack || error.message) : String(error)
+    if (page && !page.isClosed()) {
+      try {
+        const state = await page.locator('.run-state, .test-status, .lab-notice').allTextContents()
+        const output = await page.locator('.console-output pre').allTextContents()
+        diagnostic += `\nLast browser state: ${JSON.stringify({ state, output: output.map(value => value.slice(0, 2000)) })}`
+      } catch { /* Preserve the original failure even if the page is unavailable. */ }
+    }
+    const escaped = diagnostic.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A')
+    console.error(`::error title=CodeGrow browser workflow::${escaped}`)
+  }
+  throw error
 } finally {
   await page?.screenshot({ path: resolve(root, 'test-results/last-state.png'), fullPage: true }).catch(() => {})
   await browser?.close()

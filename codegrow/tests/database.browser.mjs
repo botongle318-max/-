@@ -127,6 +127,13 @@ try {
   test('reset is persisted across page reloads', emptyAfterReload === null)
   assert.deepEqual(errors, [])
   console.log('PASS no browser page errors during database operations')
+} catch (error) {
+  if (process.env.GITHUB_ACTIONS === 'true') {
+    const diagnostic = error instanceof Error ? (error.stack || error.message) : String(error)
+    const escaped = diagnostic.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A')
+    console.error(`::error title=CodeGrow SQLite browser verification::${escaped}`)
+  }
+  throw error
 } finally {
   await browser?.close()
   server.kill('SIGTERM')

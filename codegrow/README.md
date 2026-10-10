@@ -93,4 +93,8 @@ resources/licenses/  第三方许可文本
 
 CodeGrow 自写源码使用 [MIT](LICENSE)。第三方依赖和编译资源保留各自许可证，见 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md)。此许可证不改变仓库中原有个人网站的许可状态。
 
-推送到 `master` 后，仓库的 `Deploy to GitHub Pages` 工作流测试、构建并发布原网站与 CodeGrow。仓库设置中的 Pages 需使用 GitHub Actions。若仓库为私有，请在 GitHub 设置中调整为公开，才能公开访问源码；添加许可证本身不会改变仓库可见性。
+推送到 `master` 后，仓库的 `Deploy to GitHub Pages` 工作流测试、构建并发布原网站与 CodeGrow。`build` 与 `deploy` 独立：测试通过的网页产物保存在 Actions 的 `github-pages` artifact，部署失败不会丢失产物。
+
+首次发布需仓库管理员打开 [Settings → Pages](https://github.com/botongle318-max/-/settings/pages)，在 **Build and deployment → Source** 选择 **GitHub Actions**，然后在 Actions 重跑失败的部署任务。工作流的默认 `GITHUB_TOKEN` 不能自动首次启用 Pages，不需要为此添加高权限密钥。成功后，CodeGrow 地址为 `https://botongle318-max.github.io/-/codegrow/`；未启用前该地址会返回 404。
+
+若仓库为私有，请在 GitHub 设置中调整为公开，才能公开访问源码；添加许可证本身不会改变仓库可见性。
