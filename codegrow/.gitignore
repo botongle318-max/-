@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.tsbuildinfo
+server/.env
+playwright-report/
+test-results/
+public/sql-wasm.wasm
+public/compiler/

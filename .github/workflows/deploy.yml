@@ -3,6 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [master]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -26,13 +27,44 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            codegrow/package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build
         run: npm run build
+
+      - name: Install CodeGrow
+        working-directory: codegrow
+        run: npm ci
+
+      - name: Test CodeGrow
+        working-directory: codegrow
+        run: |
+          npm test
+          npm run test:server
+
+      - name: Build CodeGrow with same-origin C compiler
+        working-directory: codegrow
+        run: npm run build:site
+
+      - name: Install browser for functional tests
+        working-directory: codegrow
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify CodeGrow browser workflow
+        working-directory: codegrow
+        run: |
+          npm run test:e2e
+          npm run test:database
+
+      - name: Assemble both websites
+        run: cp -R codegrow/dist dist/codegrow
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

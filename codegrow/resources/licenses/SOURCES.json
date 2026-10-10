@@ -1,0 +1,167 @@
+{
+  "description": "Retained third-party notices; hashes identify these local notice texts, not compiler binary provenance.",
+  "notices": [
+    {
+      "file": "BINJI-WASM-CLANG-APACHE-2.0.txt",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "source": "https://raw.githubusercontent.com/binji/wasm-clang/648c4a89997a351eef75cdaec3ef5b89d4937dec/LICENSE",
+      "extraction": "full-file"
+    },
+    {
+      "file": "CLANG-8.0.1-NCSA.txt",
+      "sha256": "bdc41b826a9a50c7a31c1b613ca5d46415be68d5cc6da06f91f5bc1db8ad87aa",
+      "source": "https://raw.githubusercontent.com/llvm/llvm-project/19a71f6bdf2dddb10764939e7f0ec2b98dba76c9/clang/LICENSE.TXT",
+      "extraction": "full-file"
+    },
+    {
+      "file": "COMPILER-RT-8.0.1.txt",
+      "sha256": "dd27f8c290bcdc8368549cd7cd98710a9dbdc34122f2e096a1edb97824ed4148",
+      "source": "https://raw.githubusercontent.com/llvm/llvm-project/19a71f6bdf2dddb10764939e7f0ec2b98dba76c9/compiler-rt/LICENSE.TXT",
+      "extraction": "full-file"
+    },
+    {
+      "file": "LIBCXX-8.0.1.txt",
+      "sha256": "c3b21ee90de785b9e45590253fd08fb22b269abccaadb175c4d96d7f420340cd",
+      "source": "https://raw.githubusercontent.com/llvm/llvm-project/19a71f6bdf2dddb10764939e7f0ec2b98dba76c9/libcxx/LICENSE.TXT",
+      "extraction": "full-file"
+    },
+    {
+      "file": "LIBCXXABI-8.0.1.txt",
+      "sha256": "4ce86cf966c41a381f04ae1c82e22ea13043cd693fd726e26872620d49e94580",
+      "source": "https://raw.githubusercontent.com/llvm/llvm-project/19a71f6bdf2dddb10764939e7f0ec2b98dba76c9/libcxxabi/LICENSE.TXT",
+      "extraction": "full-file"
+    },
+    {
+      "file": "LLD-8.0.1-NCSA.txt",
+      "sha256": "a6c2a7ad246b567fd1828561ee8c244e35f73f164f031c82a7f28eff9634d23d",
+      "source": "https://raw.githubusercontent.com/llvm/llvm-project/19a71f6bdf2dddb10764939e7f0ec2b98dba76c9/lld/LICENSE.TXT",
+      "extraction": "full-file"
+    },
+    {
+      "file": "LLVM-8.0.1-ARM.txt",
+      "sha256": "28cbd5f6dac844fc3d94e879dba83c3ca87328ece8e0d388284f8cec6a042a97",
+      "source": "https://raw.githubusercontent.com/llvm/llvm-project/19a71f6bdf2dddb10764939e7f0ec2b98dba76c9/llvm/lib/Target/ARM/LICENSE.TXT",
+      "extraction": "full-file"
+    },
+    {
+      "file": "LLVM-8.0.1-MD5.txt",
+      "sha256": "c4783c46274c205bf3f906be522cc0b1ed9e89d0e01e052fdfa219666f02d1b9",
+      "source": "https://raw.githubusercontent.com/llvm/llvm-project/19a71f6bdf2dddb10764939e7f0ec2b98dba76c9/llvm/lib/Support/MD5.cpp",
+      "extraction": "copyright-and-license-header"
+    },
+    {
+      "file": "LLVM-8.0.1-NCSA.txt",
+      "sha256": "24b67da19b1422a819395738cb83ea34eee3fdce52870b0d1758524ba1615069",
+      "source": "https://raw.githubusercontent.com/llvm/llvm-project/19a71f6bdf2dddb10764939e7f0ec2b98dba76c9/llvm/LICENSE.TXT",
+      "extraction": "full-file"
+    },
+    {
+      "file": "LLVM-8.0.1-OPENBSD-REGEX.txt",
+      "sha256": "0424e57d4303164dc59a8509c20dae0518b853692e5c2b0e98b11816fdbc97c7",
+      "source": "https://raw.githubusercontent.com/llvm/llvm-project/19a71f6bdf2dddb10764939e7f0ec2b98dba76c9/llvm/lib/Support/COPYRIGHT.regex",
+      "extraction": "full-file"
+    },
+    {
+      "file": "NPM-lucide-react.txt",
+      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
+      "package": "lucide-react",
+      "version": "1.55.0",
+      "source": "https://registry.npmjs.org/lucide-react/-/lucide-react-1.55.0.tgz",
+      "archivePath": "package/LICENSE",
+      "extraction": "full-file"
+    },
+    {
+      "file": "NPM-monaco-editor-react.txt",
+      "sha256": "da0f19a87a0a014e0f6e1de99bff8073771b5b6204d8b2671d2648ab8b32cf01",
+      "package": "@monaco-editor/react",
+      "version": "4.7.0",
+      "source": "https://registry.npmjs.org/@monaco-editor/react/-/react-4.7.0.tgz",
+      "archivePath": "package/LICENSE",
+      "extraction": "full-file"
+    },
+    {
+      "file": "NPM-monaco-editor.txt",
+      "sha256": "33e4ff1a06ef62ba21788ea162564ee8165269a24a9ce6ef301837447eab0ac6",
+      "package": "monaco-editor",
+      "version": "0.55.1",
+      "source": "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.55.1.tgz",
+      "archivePath": "package/LICENSE",
+      "extraction": "full-file"
+    },
+    {
+      "file": "NPM-react-dom.txt",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "package": "react-dom",
+      "version": "19.2.8",
+      "source": "https://registry.npmjs.org/react-dom/-/react-dom-19.2.8.tgz",
+      "archivePath": "package/LICENSE",
+      "extraction": "full-file"
+    },
+    {
+      "file": "NPM-react.txt",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "package": "react",
+      "version": "19.2.8",
+      "source": "https://registry.npmjs.org/react/-/react-19.2.8.tgz",
+      "archivePath": "package/LICENSE",
+      "extraction": "full-file"
+    },
+    {
+      "file": "NPM-runno-wasi.txt",
+      "sha256": "c5aba0773357ffdc0304bc3aa048ee3d30d39b044d05e73c6f44f95e719a5ac7",
+      "package": "@runno/wasi",
+      "version": "0.10.0",
+      "source": "https://registry.npmjs.org/@runno/wasi/-/wasi-0.10.0.tgz",
+      "archivePath": "package/LICENSE",
+      "extraction": "full-file"
+    },
+    {
+      "file": "NPM-sql.js.txt",
+      "sha256": "f1c6fb37bb37afa4b52c52c37b17c98b2b1d0f900a74a4a8f86cce047cd88f76",
+      "package": "sql.js",
+      "version": "1.14.2",
+      "source": "https://registry.npmjs.org/sql.js/-/sql.js-1.14.2.tgz",
+      "archivePath": "package/LICENSE",
+      "extraction": "full-file"
+    },
+    {
+      "file": "NPM-zustand.txt",
+      "sha256": "c1e6e266563517467b1bf874817d23e426f3149252bd7d42758cd697514b8417",
+      "package": "zustand",
+      "version": "5.0.15",
+      "source": "https://registry.npmjs.org/zustand/-/zustand-5.0.15.tgz",
+      "archivePath": "package/LICENSE",
+      "extraction": "full-file"
+    },
+    {
+      "file": "WASI-LIBC-v0.1-alpha-CC0.txt",
+      "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+      "source": "https://raw.githubusercontent.com/WebAssembly/wasi-libc/d5a609fe63926533e1054e539ba5f2693d51bdf5/basics/LICENSE",
+      "extraction": "full-file"
+    },
+    {
+      "file": "WASI-LIBC-v0.1-alpha-CLOUDLIBC-BSD.txt",
+      "sha256": "c8b789cf5a746611e6300a0cc7750dbf92b61912a709d04e639245f7290656d0",
+      "source": "https://raw.githubusercontent.com/WebAssembly/wasi-libc/d5a609fe63926533e1054e539ba5f2693d51bdf5/libc-bottom-half/cloudlibc/LICENSE",
+      "extraction": "full-file"
+    },
+    {
+      "file": "WASI-LIBC-v0.1-alpha-LIBPREOPEN.txt",
+      "sha256": "956198aa83a9b3c22aafd0364fa665d3746c1792b5bcb6e156655466175ef782",
+      "source": "https://raw.githubusercontent.com/WebAssembly/wasi-libc/d5a609fe63926533e1054e539ba5f2693d51bdf5/libc-bottom-half/libpreopen/lib/libpreopen.c",
+      "extraction": "copyright-and-license-header"
+    },
+    {
+      "file": "WASI-LIBC-v0.1-alpha-MUSL-COPYRIGHT.txt",
+      "sha256": "a3ae1b9fc5d4938f5734734383b9813d27a5652df23010c6f9d4c5419b239a41",
+      "source": "https://raw.githubusercontent.com/WebAssembly/wasi-libc/d5a609fe63926533e1054e539ba5f2693d51bdf5/libc-top-half/musl/COPYRIGHT",
+      "extraction": "full-file"
+    },
+    {
+      "file": "WASI-LIBC-v0.1-alpha-NOTICE.txt",
+      "sha256": "8fabc1c9f4fabb6d0ef0a6280e906af0c85a69fea3a60c312a462386d5a4da63",
+      "source": "https://raw.githubusercontent.com/WebAssembly/wasi-libc/d5a609fe63926533e1054e539ba5f2693d51bdf5/LICENSE",
+      "extraction": "full-file"
+    }
+  ]
+}

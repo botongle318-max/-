@@ -1,5 +1,13 @@
 # React + TypeScript + Vite
 
+## CodeGrow 编程私人导师
+
+本仓库新增独立 Web MVP：[CodeGrow 文档](codegrow/README.md)。包括深色课程工作台、Monaco、浏览器 C 编译运行、SQLite 学习档案与分级导师。
+
+开发：`cd codegrow` → `npm ci` → `npm run prepare:compiler` → `npm run dev`。
+
+GitHub Pages 部署后，CodeGrow 位于原站点的 `/codegrow/` 子目录；原有个人网站继续保留。CodeGrow 源码使用 MIT，详见 [许可证](codegrow/LICENSE)。
+
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
 Currently, two official plugins are available:
