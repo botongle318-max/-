@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   createEmptySnapshot, getConceptMastery, getLearningStats, isLearningSnapshot,
-  recordAttempt, recordHint, recommendDifficulty, type LearningSnapshot,
+  recordAttempt, recordHint, recommendDifficulty, recordTutorExchange, getTutorMessages,
+  clearTutorChat, MAX_TUTOR_MESSAGES, type ChatMessage, type LearningSnapshot,
 } from '../src/services/learning'
 
 function attempt(snapshot: LearningSnapshot, overrides = {}) {
@@ -9,6 +10,13 @@ function attempt(snapshot: LearningSnapshot, overrides = {}) {
     exerciseId: 'loops-1', conceptId: 'loops', passed: true,
     score: 100, independent: true, hintLevel: 0, ...overrides,
   })
+}
+
+function exchange(index = 0, content = '请解释循环') : [ChatMessage, ChatMessage] {
+  return [
+    { id: `user-${index}`, role: 'user', content, createdAt: new Date(2026, 9, 11, 10, 0, index).toISOString() },
+    { id: `assistant-${index}`, role: 'assistant', content: `我们一起分析：${content}`, createdAt: new Date(2026, 9, 11, 10, 0, index + 1).toISOString(), source: 'local-model' },
+  ]
 }
 
 afterEach(() => { vi.useRealTimers() })
@@ -95,6 +103,105 @@ describe('learning evidence', () => {
     expect(attempt(restored, { fingerprint: 'b'.repeat(64) }).attempts).toHaveLength(2)
     expect(attempt(restored, { exerciseId: 'another-exercise', fingerprint: 'a'.repeat(64) }).attempts).toHaveLength(2)
   })
+
+  it('records explicit independent assessment and credits acknowledged assistance honestly', () => {
+    const independent = attempt(createEmptySnapshot())
+    const assisted = attempt(createEmptySnapshot(), { independent: false })
+    expect(independent.attempts[0].selfReportedIndependent).toBe(true)
+    expect(assisted.attempts[0]).toMatchObject({ independent: false, selfReportedIndependent: false, hintLevel: 0 })
+    expect(getConceptMastery(assisted, 'loops').mastery).toBe(59)
+    expect(isLearningSnapshot({ ...assisted, attempts: [{ ...assisted.attempts[0], selfReportedIndependent: 'yes' }] })).toBe(false)
+  })
+})
+
+describe('persisted tutor conversations', () => {
+  it('reads version-1 snapshots without conversation or self-assessment fields', () => {
+    const old = attempt(createEmptySnapshot())
+    delete old.attempts[0].selfReportedIndependent
+    expect(isLearningSnapshot(JSON.parse(JSON.stringify(old)))).toBe(true)
+    expect(getTutorMessages(old, 'loops-1')).toEqual([])
+    expect(getLearningStats(old).tutorMessageCount).toBe(0)
+  })
+
+  it('saves successful exchanges separately per lesson without penalizing ordinary questions', () => {
+    const original = attempt(createEmptySnapshot())
+    const updated = recordTutorExchange(original, 'loops-1', ...exchange())
+    expect(original.tutorChats).toBeUndefined()
+    expect(getTutorMessages(updated, 'loops-1')).toEqual(exchange())
+    expect(getTutorMessages(updated, 'variables')).toEqual([])
+    expect(updated.hints).toEqual(original.hints)
+    expect(updated.attempts).toBe(original.attempts)
+    expect(getLearningStats(updated)).toMatchObject({ independentRate: 100, hintCount: 0, tutorMessageCount: 2 })
+    expect(isLearningSnapshot(updated)).toBe(true)
+    const messages = getTutorMessages(updated, 'loops-1')
+    messages[0].content = 'mutated copy'
+    expect(getTutorMessages(updated, 'loops-1')[0].content).toBe('请解释循环')
+  })
+
+  it('does not persist duplicate exchanges and rejects reused IDs with different contents', () => {
+    const messages = exchange()
+    const snapshot = recordTutorExchange(createEmptySnapshot(), 'loops-1', ...messages)
+    expect(recordTutorExchange(snapshot, 'loops-1', ...messages)).toBe(snapshot)
+    expect(() => recordTutorExchange(snapshot, 'loops-1', { ...messages[0], content: 'different' }, messages[1])).toThrow(/重复/)
+    expect(() => recordTutorExchange(snapshot, 'another-lesson', ...messages)).toThrow(/重复/)
+  })
+
+  it('rejects incomplete, invalid, or fake-status exchanges', () => {
+    const [user, assistant] = exchange()
+    const empty = createEmptySnapshot()
+    expect(() => recordTutorExchange(empty, 'loops-1', user, { ...assistant, role: 'user' })).toThrow(/格式/)
+    expect(() => recordTutorExchange(empty, 'loops-1', user, { ...assistant, content: '' })).toThrow(/格式/)
+    expect(() => recordTutorExchange(empty, 'loops-1', user, { ...assistant, content: 'x'.repeat(12_001) })).toThrow(/格式/)
+    expect(() => recordTutorExchange(empty, 'loops-1', user, { ...assistant, source: 'local' as 'ai' })).toThrow(/格式/)
+    expect(() => recordTutorExchange(empty, '__proto__', user, assistant)).toThrow(/格式/)
+    expect(isLearningSnapshot({ ...empty, tutorChats: { 'loops-1': [user] } })).toBe(false)
+    expect(isLearningSnapshot({ ...empty, tutorChats: { 'loops-1': [user, { ...assistant, role: 'system' }] } })).toBe(false)
+    expect(isLearningSnapshot({ ...empty, tutorChats: { 'loops-1': [user, { ...assistant, id: user.id }] } })).toBe(false)
+  })
+
+  it('keeps the latest 20 whole exchanges and never leaves a dangling user message', () => {
+    let snapshot = createEmptySnapshot()
+    for (let index = 0; index < 25; index += 1) snapshot = recordTutorExchange(snapshot, 'loops-1', ...exchange(index))
+    const messages = getTutorMessages(snapshot, 'loops-1')
+    expect(messages).toHaveLength(MAX_TUTOR_MESSAGES)
+    expect(messages[0]).toMatchObject({ id: 'user-5', role: 'user' })
+    expect(messages.at(-1)).toMatchObject({ id: 'assistant-24', role: 'assistant' })
+    expect(isLearningSnapshot(snapshot)).toBe(true)
+  })
+
+  it('limits total conversation size while retaining recent complete exchanges', () => {
+    let snapshot = createEmptySnapshot()
+    for (let index = 0; index < 12; index += 1) {
+      const [user, assistant] = exchange(index)
+      snapshot = recordTutorExchange(snapshot, `lesson-${index}`, { ...user, content: 'x'.repeat(12_000) }, { ...assistant, content: 'y'.repeat(12_000) })
+    }
+    const chats = Object.values(snapshot.tutorChats ?? {})
+    expect(chats.flat().reduce((sum, message) => sum + message.content.length, 0)).toBeLessThanOrEqual(200_000)
+    expect(chats.every(messages => messages.length % 2 === 0)).toBe(true)
+    expect(getTutorMessages(snapshot, 'lesson-11')).toHaveLength(2)
+    expect(isLearningSnapshot(snapshot)).toBe(true)
+  })
+
+  it('bounds the number of retained lesson chats and evicts the oldest inactive lesson', () => {
+    let snapshot = createEmptySnapshot()
+    for (let index = 0; index < 41; index += 1) snapshot = recordTutorExchange(snapshot, `lesson-${index}`, ...exchange(index))
+    expect(Object.keys(snapshot.tutorChats ?? {})).toHaveLength(40)
+    expect(getTutorMessages(snapshot, 'lesson-0')).toEqual([])
+    expect(getTutorMessages(snapshot, 'lesson-40')).toHaveLength(2)
+    expect(isLearningSnapshot(snapshot)).toBe(true)
+  })
+
+  it('clears only the selected lesson and leaves learning evidence intact', () => {
+    let snapshot = attempt(createEmptySnapshot())
+    snapshot = recordTutorExchange(snapshot, 'loops-1', ...exchange())
+    snapshot = recordTutorExchange(snapshot, 'variables', ...exchange(1))
+    const cleared = clearTutorChat(snapshot, 'loops-1')
+    expect(getTutorMessages(cleared, 'loops-1')).toEqual([])
+    expect(getTutorMessages(cleared, 'variables')).toEqual(exchange(1))
+    expect(getTutorMessages(snapshot, 'loops-1')).toHaveLength(2)
+    expect(cleared.attempts).toBe(snapshot.attempts)
+    expect(clearTutorChat(cleared, 'missing')).toBe(cleared)
+  })
 })
 
 describe('adaptive difficulty', () => {
@@ -120,5 +227,11 @@ describe('adaptive difficulty', () => {
     snapshot = attempt(snapshot, { passed: false, score: 50 })
     expect(recommendDifficulty(snapshot, 'loops', 3)).toMatchObject({ difficulty: 2, mode: 'debug' })
     expect(recommendDifficulty(snapshot, 'loops', 1).difficulty).toBe(1)
+  })
+
+  it('does not automatically raise difficulty for self-reported assisted completions', () => {
+    let snapshot = createEmptySnapshot()
+    for (let index = 0; index < 5; index += 1) snapshot = attempt(snapshot, { independent: false })
+    expect(recommendDifficulty(snapshot, 'loops', 2).mode).not.toBe('challenge')
   })
 })

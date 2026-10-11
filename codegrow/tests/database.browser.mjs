@@ -63,6 +63,8 @@ try {
     })
     snapshot.drafts['browser-test'] = '#include <stdio.h>\nint main(void){puts("你好，CodeGrow!");return 0;}'
     snapshot.completedIds = ['browser-test']
+    // Simulate an existing v1 database written before chats/self-assessment were introduced.
+    delete snapshot.attempts[0].selfReportedIndependent
     await db.saveSnapshot(snapshot)
     const actual = await db.readSnapshot()
     const signature = new TextDecoder().decode(db.exportDatabase().slice(0, 16))
@@ -81,6 +83,32 @@ try {
   })
   assert.deepEqual(restored, first.expected)
   console.log('PASS SQLite bytes are restored from IndexedDB after a complete page reload')
+
+  const chatted = await page.evaluate(async () => {
+    const db = await import('/src/services/database.ts')
+    const learning = await import('/src/services/learning.ts')
+    const previous = await db.readSnapshot()
+    const now = new Date().toISOString()
+    const next = learning.recordTutorExchange(previous, 'browser-test',
+      { id: 'saved-question', role: 'user', content: '循环为什么能够停止？', createdAt: now },
+      { id: 'saved-answer', role: 'assistant', content: '观察每轮执行后，控制变量是否更接近结束条件。', createdAt: now, source: 'local-model' },
+    )
+    await db.saveSnapshot(next)
+    return { actual: await db.readSnapshot(), expected: next, stats: learning.getLearningStats(next) }
+  })
+  assert.deepEqual(chatted.actual, chatted.expected)
+  test('old version-1 SQLite snapshots accept successful model exchanges without losing attempts', chatted.actual.attempts.length === 1 && chatted.stats.hintCount === 0 && chatted.stats.independentRate === 100 && chatted.stats.tutorMessageCount === 2)
+  await page.reload()
+  const restoredChats = await page.evaluate(async () => {
+    const db = await import('/src/services/database.ts')
+    const learning = await import('/src/services/learning.ts')
+    await db.initDatabase()
+    const snapshot = await db.readSnapshot()
+    return { snapshot, messages: learning.getTutorMessages(snapshot, 'browser-test') }
+  })
+  assert.deepEqual(restoredChats.snapshot, chatted.expected)
+  assert.deepEqual(restoredChats.messages, chatted.expected.tutorChats['browser-test'])
+  console.log('PASS per-lesson model conversation is reread from SQLite after a full reload')
 
   const queued = await page.evaluate(async () => {
     const db = await import('/src/services/database.ts')

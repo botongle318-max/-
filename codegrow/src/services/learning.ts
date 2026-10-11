@@ -20,6 +20,8 @@ export interface ExerciseAttempt {
   errorType?: string
   /** SHA-256 of source and input, used to deduplicate runs across restarts. */
   fingerprint?: string
+  /** Explicit learner assessment; absent on records from older releases. */
+  selfReportedIndependent?: boolean
 }
 
 export interface HintEvent {
@@ -29,6 +31,14 @@ export interface HintEvent {
   level: HintLevel
 }
 
+export interface ChatMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  createdAt: string
+  source?: 'local-model' | 'ai'
+}
+
 export interface LearningSnapshot {
   version: 1
   sessions: LearningSession[]
@@ -36,6 +46,8 @@ export interface LearningSnapshot {
   hints: HintEvent[]
   completedIds: string[]
   drafts: Record<string, string>
+  /** Optional to preserve compatibility with existing version-1 SQLite records. */
+  tutorChats?: Record<string, ChatMessage[]>
 }
 
 export interface ConceptMastery {
@@ -54,6 +66,7 @@ export interface LearningStats {
   averageAccuracy: number
   independentRate: number
   hintCount: number
+  tutorMessageCount: number
   streakDays: number
   masteredConcepts: number
   concepts: ConceptMastery[]
@@ -74,6 +87,10 @@ export const CONCEPTS = [
 ] as const
 
 const HINT_COST = [0, 0.1, 0.3, 0.6, 1] as const
+export const MAX_TUTOR_MESSAGES = 40
+const MAX_TUTOR_CHATS = 40
+const MAX_TUTOR_MESSAGE_LENGTH = 12_000
+const MAX_TUTOR_CONTENT_LENGTH = 200_000
 const clamp = (value: number, minimum: number, maximum: number) =>
   Math.min(maximum, Math.max(minimum, value))
 
@@ -83,6 +100,39 @@ function uniqueId(): string {
 
 export function createEmptySnapshot(): LearningSnapshot {
   return { version: 1, sessions: [], attempts: [], hints: [], completedIds: [], drafts: {} }
+}
+
+function validLessonId(id: string): boolean {
+  return id.length > 0 && id.length <= 100 && !['__proto__', 'constructor', 'prototype'].includes(id)
+}
+
+function isChatMessage(value: unknown): value is ChatMessage {
+  if (!value || typeof value !== 'object') return false
+  const message = value as Partial<ChatMessage>
+  return typeof message.id === 'string' && message.id.length > 0 && message.id.length <= 128 &&
+    (message.role === 'user' || message.role === 'assistant') &&
+    typeof message.content === 'string' && message.content.trim().length > 0 && message.content.length <= MAX_TUTOR_MESSAGE_LENGTH &&
+    typeof message.createdAt === 'string' && Number.isFinite(Date.parse(message.createdAt)) &&
+    (message.source === undefined || message.source === 'local-model' || message.source === 'ai') &&
+    (message.role !== 'user' || message.source === undefined)
+}
+
+function isTutorChats(value: unknown): value is Record<string, ChatMessage[]> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  const entries = Object.entries(value)
+  if (entries.length > MAX_TUTOR_CHATS) return false
+  const ids = new Set<string>()
+  let contentLength = 0
+  for (const [lessonId, messages] of entries) {
+    if (!validLessonId(lessonId) || !Array.isArray(messages) || messages.length > MAX_TUTOR_MESSAGES || messages.length % 2 !== 0) return false
+    for (let index = 0; index < messages.length; index += 1) {
+      const message: unknown = messages[index]
+      if (!isChatMessage(message) || message.role !== (index % 2 === 0 ? 'user' : 'assistant') || ids.has(message.id)) return false
+      ids.add(message.id)
+      contentLength += message.content.length
+    }
+  }
+  return contentLength <= MAX_TUTOR_CONTENT_LENGTH
 }
 
 export function isLearningSnapshot(value: unknown): value is LearningSnapshot {
@@ -100,13 +150,15 @@ export function isLearningSnapshot(value: unknown): value is LearningSnapshot {
       attempt.score >= 0 && attempt.score <= 100 && typeof attempt.independent === 'boolean' &&
       Number.isInteger(attempt.hintLevel) && attempt.hintLevel >= 0 && attempt.hintLevel <= 4 &&
       (attempt.errorType === undefined || typeof attempt.errorType === 'string') &&
-      (attempt.fingerprint === undefined || (typeof attempt.fingerprint === 'string' && /^[a-f0-9]{64}$/i.test(attempt.fingerprint)))) &&
+      (attempt.fingerprint === undefined || (typeof attempt.fingerprint === 'string' && /^[a-f0-9]{64}$/i.test(attempt.fingerprint))) &&
+      (attempt.selfReportedIndependent === undefined || typeof attempt.selfReportedIndependent === 'boolean')) &&
     Array.isArray(snapshot.hints) && snapshot.hints.every(hint =>
       hint && typeof hint.id === 'string' && typeof hint.exerciseId === 'string' &&
       typeof hint.createdAt === 'string' && Number.isInteger(hint.level) && hint.level >= 1 && hint.level <= 4) &&
     Array.isArray(snapshot.completedIds) && snapshot.completedIds.every(id => typeof id === 'string') &&
     !!snapshot.drafts && typeof snapshot.drafts === 'object' && !Array.isArray(snapshot.drafts) &&
-    Object.values(snapshot.drafts).every(draft => typeof draft === 'string')
+    Object.values(snapshot.drafts).every(draft => typeof draft === 'string') &&
+    (snapshot.tutorChats === undefined || isTutorChats(snapshot.tutorChats))
 }
 
 export function recordAttempt(
@@ -124,7 +176,8 @@ export function recordAttempt(
     createdAt: new Date().toISOString(),
     score: clamp(Number.isFinite(input.score) ? input.score : 0, 0, 100),
     hintLevel,
-    independent: input.independent && hintLevel === 0,
+    independent: input.independent && hintLevel === 0 && input.selfReportedIndependent !== false,
+    selfReportedIndependent: input.selfReportedIndependent ?? (hintLevel === 0 ? input.independent : undefined),
   }
   return { ...snapshot, attempts: [...snapshot.attempts, attempt] }
 }
@@ -139,6 +192,60 @@ export function recordHint(
   }
 }
 
+/** Returns a copy so callers cannot mutate messages already held by the learning state. */
+export function getTutorMessages(snapshot: LearningSnapshot, lessonId: string): ChatMessage[] {
+  if (!validLessonId(lessonId) || !snapshot.tutorChats || !Object.hasOwn(snapshot.tutorChats, lessonId)) return []
+  return (snapshot.tutorChats?.[lessonId] ?? []).map(message => ({ ...message }))
+}
+
+/** Only complete, successful user/assistant exchanges belong in the learning database. */
+export function recordTutorExchange(
+  snapshot: LearningSnapshot,
+  lessonId: string,
+  user: ChatMessage,
+  assistant: ChatMessage,
+): LearningSnapshot {
+  if (!validLessonId(lessonId) || !isChatMessage(user) || !isChatMessage(assistant) ||
+    user.role !== 'user' || assistant.role !== 'assistant' || user.id === assistant.id) {
+    throw new Error('导师对话格式无效，未保存。')
+  }
+  const existing = snapshot.tutorChats?.[lessonId] ?? []
+  const userIndex = existing.findIndex(message => message.id === user.id)
+  const equalMessage = (first: ChatMessage | undefined, second: ChatMessage) => !!first &&
+    first.id === second.id && first.role === second.role && first.content === second.content &&
+    first.createdAt === second.createdAt && first.source === second.source
+  if (userIndex >= 0 && userIndex % 2 === 0 &&
+    equalMessage(existing[userIndex], user) && equalMessage(existing[userIndex + 1], assistant)) return snapshot
+  const allIds = new Set(Object.values(snapshot.tutorChats ?? {}).flat().map(message => message.id))
+  if (allIds.has(user.id) || allIds.has(assistant.id)) throw new Error('导师消息标识重复，未保存。')
+  const chats: Record<string, ChatMessage[]> = {
+    ...snapshot.tutorChats,
+    [lessonId]: [...existing, { ...user }, { ...assistant }].slice(-MAX_TUTOR_MESSAGES),
+  }
+  const chatTime = (messages: ChatMessage[]) => Date.parse(messages.at(-1)?.createdAt ?? '') || 0
+  while (Object.keys(chats).length > MAX_TUTOR_CHATS) {
+    const oldest = Object.entries(chats).sort((a, b) => chatTime(a[1]) - chatTime(b[1]))[0]
+    delete chats[oldest[0]]
+  }
+  let contentLength = Object.values(chats).flat().reduce((sum, message) => sum + message.content.length, 0)
+  while (contentLength > MAX_TUTOR_CONTENT_LENGTH) {
+    const oldest = Object.entries(chats).filter(([, messages]) => messages.length > 0)
+      .sort((a, b) => Date.parse(a[1][0].createdAt) - Date.parse(b[1][0].createdAt))[0]
+    const removed = oldest[1].slice(0, 2)
+    contentLength -= removed.reduce((sum, message) => sum + message.content.length, 0)
+    chats[oldest[0]] = oldest[1].slice(2)
+    if (!chats[oldest[0]].length) delete chats[oldest[0]]
+  }
+  return { ...snapshot, tutorChats: chats }
+}
+
+export function clearTutorChat(snapshot: LearningSnapshot, lessonId: string): LearningSnapshot {
+  if (!snapshot.tutorChats || !Object.hasOwn(snapshot.tutorChats, lessonId)) return snapshot
+  const chats = { ...snapshot.tutorChats }
+  delete chats[lessonId]
+  return { ...snapshot, tutorChats: chats }
+}
+
 export function getConceptMastery(snapshot: LearningSnapshot, conceptId: string): ConceptMastery {
   const attempts = snapshot.attempts
     .filter(attempt => attempt.conceptId === conceptId)
@@ -149,7 +256,8 @@ export function getConceptMastery(snapshot: LearningSnapshot, conceptId: string)
   let mastery: number | null = null
   for (const attempt of attempts) {
     // A run provides no separate reflection evidence yet; reserve its 20% for a later transfer exercise.
-    const evidence = (attempt.score / 100) * (0.45 + 0.35 * (1 - HINT_COST[attempt.hintLevel])) * 100
+    const assistanceCost = Math.max(HINT_COST[attempt.hintLevel], attempt.selfReportedIndependent === false ? 0.6 : 0)
+    const evidence = (attempt.score / 100) * (0.45 + 0.35 * (1 - assistanceCost)) * 100
     mastery = mastery === null ? evidence : 0.75 * mastery + 0.25 * evidence
   }
   const recent = attempts.slice(-10)
@@ -193,6 +301,7 @@ export function getLearningStats(snapshot: LearningSnapshot): LearningStats {
     averageAccuracy: attempts ? Math.round(snapshot.attempts.reduce((total, attempt) => total + attempt.score, 0) / attempts) : 0,
     independentRate: attempts ? Math.round(snapshot.attempts.filter(attempt => attempt.independent).length / attempts * 100) : 0,
     hintCount: snapshot.hints.length,
+    tutorMessageCount: Object.values(snapshot.tutorChats ?? {}).reduce((sum, messages) => sum + messages.length, 0),
     streakDays: getStreakDays(snapshot),
     masteredConcepts: concepts.filter(concept => (concept.mastery ?? 0) >= 80 && concept.evidenceCount >= 3).length,
     concepts,
@@ -226,7 +335,7 @@ export function recommendDifficulty(
   }
   const recentScore = recent.reduce((sum, attempt) => sum + attempt.score, 0) / (recent.length || 1)
   const recentHints = recent.reduce((sum, attempt) => sum + attempt.hintLevel, 0) / (recent.length || 1)
-  if (recent.length === 5 && recentScore > 85 && recentHints <= 1 && recent.every(attempt => attempt.passed)) {
+  if (recent.length === 5 && recentScore > 85 && recentHints <= 1 && recent.every(attempt => attempt.passed && attempt.selfReportedIndependent !== false)) {
     return { difficulty: Math.min(5, base + 1), mode: 'challenge', reason: '最近五次成绩超过 85%，且平均提示不超过一级，可以尝试进阶任务。' }
   }
   if (mastery.mastery === null || mastery.mastery < 40) {

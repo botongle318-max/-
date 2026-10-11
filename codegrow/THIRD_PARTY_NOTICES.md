@@ -1,7 +1,7 @@
 # Third-party notices
 
 CodeGrow's MIT license covers the original CodeGrow source code. It does not
-relicense third-party packages, the WebAssembly compiler, its runtime libraries,
+relicense third-party packages, AI model weights, the WebAssembly compiler, its runtime libraries,
 or the pre-existing projects elsewhere in this repository. Those components
 retain their own copyright notices and license terms.
 
@@ -76,6 +76,44 @@ notices remain in their distributions and generated bundle comments.
 | @monaco-editor/react | 4.7.0 | [MIT](resources/licenses/NPM-monaco-editor-react.txt) |
 | @runno/wasi | 0.10.0 | [MIT](resources/licenses/NPM-runno-wasi.txt) |
 | sql.js | 1.14.2 | [MIT; SQLite is public domain](resources/licenses/NPM-sql.js.txt) |
+| @mlc-ai/web-llm | 0.2.85 | [Apache-2.0 and bundled protocol notice](resources/licenses/NPM-web-llm.txt) |
+| loglevel (WebLLM runtime dependency) | 1.9.2 | [MIT](resources/licenses/NPM-loglevel.txt) |
 
 Dependency upgrades and toolchain replacements must update this list and retain
 the corresponding original license and attribution texts.
+
+## Optional local AI models
+
+The browser-local tutor uses Qwen2.5-Coder **1.5B-Instruct** and **7B-Instruct**,
+published by the Qwen Team, through the `mlc-ai` quantized model repositories
+listed in WebLLM 0.2.85's official model catalog. CodeGrow does not bundle or
+commit model weights; the learner explicitly downloads a selected model into
+their browser cache from Hugging Face, or from a separately selected third-party
+HF-Mirror source. Model libraries come from MLC's official binary library catalog.
+
+Qwen's official model release explicitly licenses the 1.5B and 7B weights under
+**Apache-2.0**, and states that both Base and Instruct models were released for
+each size. This is a model-weight licensing declaration, not an inference from a
+source-code repository's LICENSE. The release also gives the 3B model different
+Qwen-Research terms; the 3B model is not offered by CodeGrow.
+
+The verbatim declaration and table are retained in
+[QWEN2.5-CODER-MODEL-LICENSE.md](resources/licenses/QWEN2.5-CODER-MODEL-LICENSE.md),
+from the [official release source at a fixed revision](https://github.com/QwenLM/qwenlm.github.io/blob/7e70adff995f86c62e7ad1fe3c8645dc9f0a48ef/content/blog/qwen2.5-coder-family/index.md).
+A complete copy of the generic [Apache-2.0 terms](resources/licenses/APACHE-2.0.txt)
+is included; its source is recorded separately and does not establish which
+models use those terms.
+
+Verification scope: the upstream Qwen weight license and official WebLLM model
+IDs/URLs have been checked. The cloud environment's proxy rejected CONNECT to
+Hugging Face with HTTP 403, so the quantized MLC repositories' own model cards,
+LICENSE/NOTICE files, shard inventories, and exact download sizes were not
+independently inspected. This is not a claim that those files do not exist, or
+that Hugging Face is unavailable on the learner's computer. No model weights
+have been downloaded or rehosted in this repository. Before mirroring,
+redistributing, or modifying weights or model-library binaries, obtain the
+original distributions and retain all applicable copyright and NOTICE files;
+this record alone is not a complete artifact-level redistribution audit.
+
+See [the local AI guide](docs/LOCAL_AI.md) for supported hardware, download
+sources, context limits, and the distinction between estimated VRAM and storage.

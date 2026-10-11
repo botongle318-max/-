@@ -2,7 +2,7 @@
 
 ## CodeGrow 编程私人导师
 
-本仓库新增独立 Web MVP：[CodeGrow 文档](codegrow/README.md)。包括深色课程工作台、Monaco、浏览器 C 编译运行、SQLite 学习档案与分级导师。
+本仓库新增独立 Web MVP：[CodeGrow 文档](codegrow/README.md)。包括深色课程工作台、Monaco、浏览器 C 编译运行、SQLite 学习档案与免费本地 AI 私人导师。支持自由提问、多轮交流和逐步教学，模型由用户主动下载后在浏览器 GPU 上运行。
 
 开发：`cd codegrow` → `npm ci` → `npm run prepare:compiler` → `npm run dev`。
 

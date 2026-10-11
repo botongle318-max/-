@@ -1,5 +1,5 @@
 {
-  "description": "Retained third-party notices; hashes identify these local notice texts, not compiler binary provenance.",
+  "description": "Retained third-party notices; hashes identify these local notice texts, not compiler binary or model-weight provenance.",
   "notices": [
     {
       "file": "BINJI-WASM-CLANG-APACHE-2.0.txt",
@@ -162,6 +162,40 @@
       "sha256": "8fabc1c9f4fabb6d0ef0a6280e906af0c85a69fea3a60c312a462386d5a4da63",
       "source": "https://raw.githubusercontent.com/WebAssembly/wasi-libc/d5a609fe63926533e1054e539ba5f2693d51bdf5/LICENSE",
       "extraction": "full-file"
+    },
+    {
+      "file": "NPM-web-llm.txt",
+      "sha256": "d412ab9d5ac17e6931705aac01e5a0d323da5acd2e89a2c19aa8fc05becc59ad",
+      "package": "@mlc-ai/web-llm",
+      "version": "0.2.85",
+      "source": "https://registry.npmjs.org/@mlc-ai/web-llm/-/web-llm-0.2.85.tgz",
+      "archivePath": "package/LICENSE",
+      "extraction": "full-file"
+    },
+    {
+      "file": "NPM-loglevel.txt",
+      "sha256": "670938953c9a91c1b66881d8b3f1a167276e2f32d05d8ba7d9aebde1d15177e1",
+      "package": "loglevel",
+      "version": "1.9.2",
+      "source": "https://registry.npmjs.org/loglevel/-/loglevel-1.9.2.tgz",
+      "archivePath": "package/LICENSE-MIT",
+      "sourceSha256": "18e8cf5f0dbaf13d9562e93b9bef79aff2acff18fab698c2d589d2159375a1f9",
+      "extraction": "full-file; CRLF line endings normalized to LF"
+    },
+    {
+      "file": "APACHE-2.0.txt",
+      "sha256": "c95bae1d1ce0235ecccd3560b772ec1efb97f348a79f0fbe0a634f0c2ccefe2c",
+      "source": "https://registry.npmjs.org/@mlc-ai/web-llm/-/web-llm-0.2.85.tgz",
+      "archivePath": "package/LICENSE",
+      "sourceSha256": "d412ab9d5ac17e6931705aac01e5a0d323da5acd2e89a2c19aa8fc05becc59ad",
+      "extraction": "lines 1-202; generic Apache-2.0 terms only; not evidence of model-weight licensing"
+    },
+    {
+      "file": "QWEN2.5-CODER-MODEL-LICENSE.md",
+      "sha256": "65a68defc8d75833084dcadef9f57ca44dba8abc488a418af481817c694760a2",
+      "source": "https://raw.githubusercontent.com/QwenLM/qwenlm.github.io/7e70adff995f86c62e7ad1fe3c8645dc9f0a48ef/content/blog/qwen2.5-coder-family/index.md",
+      "sourceSha256": "27e9c29fc1968d70a2ab806f947774b41592d01ba10c0fd902c314832128cc01",
+      "extraction": "verbatim lines 83-99 and 141-144: model-size/license table, Base/Instruct release statement, and Model License section"
     }
   ]
 }

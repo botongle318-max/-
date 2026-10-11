@@ -1,6 +1,6 @@
 {
   "name": "codegrow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "An open-source programming mentor for C learners.",
@@ -19,6 +19,7 @@
     "postinstall": "node scripts/copy-assets.mjs"
   },
   "dependencies": {
+    "@mlc-ai/web-llm": "0.2.85",
     "@monaco-editor/react": "4.7.0",
     "@runno/wasi": "0.10.0",
     "lucide-react": "1.55.0",
