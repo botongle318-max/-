@@ -1,0 +1,50 @@
+name: CodeGrow performance regression checks
+
+on:
+  push:
+    branches: [perf/codegrow-v0.3]
+  pull_request:
+    paths:
+      - 'codegrow/**'
+      - '.github/workflows/codegrow-checks.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codegrow-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: codegrow
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: codegrow/package-lock.json
+      - run: npm ci
+      - run: npm run prepare:compiler
+      - run: npm test
+      - run: npm run test:server
+      - run: npm run build:site
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - run: npm run test:database
+      - run: npm run test:performance
+      - name: Preserve isolated browser diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: codegrow-performance-diagnostics
+          path: codegrow/test-results
+          if-no-files-found: ignore
+
+# This workflow does not build, alter or deploy the personal homepage.
+# The existing master Pages workflow remains the only production deployment.

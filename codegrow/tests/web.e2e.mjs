@@ -129,6 +129,7 @@ try {
   const hello = '#include <stdio.h>\nint main(void) {\n    printf("Hello, CodeGrow!\\n");\n    return 0;\n}\n'
   await page.getByRole('checkbox', { name: '本次练习由我独立完成' }).check()
   await edit(page, hello)
+  const savedHello = await readEditorSource(page)
   await run(page)
   check('real WASM C compile and run produces expected output', (await page.locator('.console-output pre').textContent()).trim() === 'Hello, CodeGrow!')
   await page.getByRole('tab', { name: '测试', exact: true }).click()
@@ -150,7 +151,9 @@ try {
   check('SQLite restores completion and attempts after a full reload', await page.locator('.activity-row').count() === 1 && (await page.locator('.stat-card').nth(2).locator('strong').innerText()).replace(/\s/g, '') === '1节')
   await page.getByRole('button', { name: '代码实验室', exact: true }).click()
   await page.locator('.monaco-editor .view-lines').waitFor()
-  check('code draft survives reload', await page.locator('.monaco-editor').innerText().then((text) => text.replace(/\u00a0/g, ' ').includes('Hello, CodeGrow!')))
+  const restoredSource = await readEditorSource(page)
+  assert.equal(restoredSource, savedHello, 'code draft survives reload')
+  check('code draft survives reload', true)
 
   await page.getByLabel('标准输入', { exact: true }).fill('custom')
   await run(page)

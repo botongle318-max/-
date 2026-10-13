@@ -1,6 +1,6 @@
 {
   "name": "codegrow",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "An open-source programming mentor for C learners.",
@@ -11,7 +11,8 @@
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
     "test:server": "node --test server/*.test.mjs",
-    "test:e2e": "node tests/web.e2e.mjs",
+    "test:e2e": "node tests/build-assets.mjs && node tests/web.e2e.mjs && node tests/compiler-cache.browser.mjs && node tests/local-ai.browser.mjs",
+    "test:performance": "node tests/performance.browser.mjs",
     "test:database": "node tests/database.browser.mjs",
     "prepare:compiler": "node scripts/prepare-compiler.mjs",
     "build:site": "npm run prepare:compiler && npm run build",

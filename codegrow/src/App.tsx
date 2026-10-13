@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowRight, Bell, BookOpen, Check, ChevronRight, Code2, Compass, Flame, GraduationCap, LayoutDashboard, Leaf, Search, Settings as SettingsIcon, ShieldCheck, Sparkles, Sprout, Target, Terminal, Trophy, WifiOff, X } from 'lucide-react'
 import { useUI, type Page } from './stores/ui'
 import { lessons } from './data/curriculum'
@@ -26,7 +26,9 @@ export default function App() {
   const [query, setQuery] = useState('')
   const [notifications, setNotifications] = useState(false)
   const saveGeneration = useRef(0)
-  const stats = getLearningStats(snapshot)
+  const todayKey = new Date().toDateString()
+  // Draft keystrokes do not change evidence; avoid sorting all attempts per keypress.
+  const stats = useMemo(() => getLearningStats(snapshot), [snapshot.attempts, snapshot.sessions, snapshot.completedIds, snapshot.hints, snapshot.tutorChats, todayKey])
   const today = new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' }).format(new Date())
 
   useEffect(() => {
@@ -80,7 +82,7 @@ export default function App() {
           {page === 'progress' && <Progress snapshot={snapshot} />}
           {page === 'settings' && <Settings onReset={reset} />}
         </>}
-      </main><footer className="statusbar"><span><ShieldCheck size={13} />学习记录保存在此浏览器</span><span>{saved ? <Check size={13} /> : <span className="status-dot" />}{saved ? '已保存到本地 SQLite' : '正在保存…'}<span className="status-divider">|</span>CodeGrow v0.2</span></footer>
+      </main><footer className="statusbar"><span><ShieldCheck size={13} />学习记录保存在此浏览器</span><span>{saved ? <Check size={13} /> : <span className="status-dot" />}{saved ? '已保存到本地 SQLite' : '正在保存…'}<span className="status-divider">|</span>CodeGrow v0.3</span></footer>
     </div>
   </div>
 }

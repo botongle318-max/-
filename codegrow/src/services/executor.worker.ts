@@ -12,6 +12,8 @@ scope.onmessage = async ({ data: request }) => {
   let stdout = '';
   let stderr = '';
   const execution: { phase: ExecutionPhase } = { phase: 'loading' };
+  const timings: Record<string, number> = {};
+  const started = performance.now();
   const sendPhase = (value: ExecutionPhase) => {
     execution.phase = value;
     scope.postMessage({ type: 'phase', id: request.id, phase: value });
@@ -26,14 +28,21 @@ scope.onmessage = async ({ data: request }) => {
     scope.postMessage({ type: 'output', id: request.id, channel, output: value });
   };
   const complete = (status: RunResult['status'], exitCode: number) => {
-    scope.postMessage({ type: 'result', id: request.id, result: { stdout, stderr, status, exitCode } });
+    timings.workerMs = performance.now() - started;
+    scope.postMessage({ type: 'result', id: request.id, result: { stdout, stderr, status, exitCode, timings } });
   };
 
   try {
     sendPhase('loading');
-    const assets = await loadCompilerAssets(request.assetBaseUrl);
+    const assets = await loadCompilerAssets(request.assetBaseUrl, (progress) => {
+      scope.postMessage({ type: 'preparation', id: request.id, progress });
+    });
+    Object.assign(timings, assets.timings);
+    if (request.type === 'prepare') { complete('success', 0); return; }
+    const cloneStarted = performance.now();
     const now = new Date();
     let fs: WASIFS = structuredClone(assets.fs);
+    timings.fsCloneMs = performance.now() - cloneStarted;
     const source = request.language === 'cpp' ? '/main.cpp' : '/main.c';
     fs[source] = {
       path: source,
@@ -62,6 +71,7 @@ scope.onmessage = async ({ data: request }) => {
     };
 
     sendPhase('compiling');
+    const compileStarted = performance.now();
     const compileExit = await execute(assets.clang, [
       'clang', '-cc1', '-triple', 'wasm32-unknown-wasi',
       '-isysroot', '/',
@@ -70,27 +80,34 @@ scope.onmessage = async ({ data: request }) => {
       '-ferror-limit', '6', '-fmessage-length', '100',
       '-O0', '-emit-obj', '-o', '/main.o', source,
     ]);
+    timings.compileMs = performance.now() - compileStarted;
     if (compileExit !== 0) {
       complete('compile-error', compileExit);
       return;
     }
     sendPhase('linking');
+    const linkStarted = performance.now();
     const linkExit = await execute(assets.linker, [
       'wasm-ld', '--no-threads', '--export-dynamic', '--max-memory=67108864', '-z', 'stack-size=1048576',
       '-L/lib/wasm32-wasi', '/lib/wasm32-wasi/crt1.o', '/main.o', '-lc',
       ...(request.language === 'cpp' ? ['-lc++', '-lc++abi'] : []),
       '-o', '/program.wasm',
     ]);
+    timings.linkMs = performance.now() - linkStarted;
     if (linkExit !== 0) {
       complete('compile-error', linkExit);
       return;
     }
     const binary = fs['/program.wasm'];
     if (!binary || binary.mode !== 'binary') throw new Error('链接器没有生成可执行程序。');
+    const programCompileStarted = performance.now();
     const program = await WebAssembly.compile(new Uint8Array(binary.content));
-    // Yield once so the main thread can arm the runtime timer before _start executes.
+    timings.programCompileMs = performance.now() - programCompileStarted;
+    // The main thread owns the deadline and can terminate this Worker during _start.
     sendPhase('running');
+    const runStarted = performance.now();
     const programExit = await execute(program, ['program'], request.stdin);
+    timings.runMs = performance.now() - runStarted;
     complete(programExit === 0 ? 'success' : 'runtime-error', programExit);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

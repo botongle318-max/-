@@ -1,0 +1,1190 @@
+{
+  "baselineCommit": "1a36c46887e2295ed704e608d1dd88b3c682bb76",
+  "note": "Isolated Linux localhost and explicitly synthetic throttling only; no mainland network or real WebGPU inference measurement.",
+  "reports": {
+    "before": {
+      "measuredAt": "2026-10-11T11:31:11.949Z",
+      "browser": "154.0.8037.57",
+      "environment": "Linux headless Chromium; uncompressed loopback HTTP; isolated empty browser context; no throttling; no WebGPU/model inference measured",
+      "homeMs": 630,
+      "editorMs": 542,
+      "coldRunMs": 886,
+      "warmRunMs": [
+        102,
+        124,
+        130
+      ],
+      "reloadEditorMs": 865,
+      "cachedRunMs": 840,
+      "compilerRequestsCold": 3,
+      "compilerRequestsAfterReload": 0,
+      "modelRequests": 0,
+      "metrics": {
+        "ScriptDuration": 0.100209,
+        "TaskDuration": 0.264369,
+        "JSHeapUsedSize": 28928584
+      },
+      "homeResources": [
+        {
+          "name": "index-BG3Mhs_m.js",
+          "durationMs": 20,
+          "transferBytes": 345187
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "durationMs": 17,
+          "transferBytes": 44416
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 12,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 3,
+          "transferBytes": 573
+        }
+      ],
+      "resources": [
+        {
+          "name": "index-BG3Mhs_m.js",
+          "durationMs": 5,
+          "transferBytes": 345187
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "durationMs": 4,
+          "transferBytes": 44416
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 5,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 3,
+          "transferBytes": 573
+        },
+        {
+          "name": "Editor-CspiRix0.js",
+          "durationMs": 16,
+          "transferBytes": 3639919
+        },
+        {
+          "name": "Editor-xM2YrZF0.css",
+          "durationMs": 4,
+          "transferBytes": 146283
+        },
+        {
+          "name": "cpp-C7h46wYY.js",
+          "durationMs": 3,
+          "transferBytes": 5043
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "durationMs": -3,
+          "transferBytes": 280721
+        },
+        {
+          "name": "executor.worker-C_T3t2Y7.js",
+          "durationMs": -6,
+          "transferBytes": 64820
+        }
+      ],
+      "assets": [
+        {
+          "name": "Editor-CspiRix0.js",
+          "bytes": 3639619,
+          "gzipBytes": 919782
+        },
+        {
+          "name": "Editor-xM2YrZF0.css",
+          "bytes": 145983,
+          "gzipBytes": 22686
+        },
+        {
+          "name": "cpp-C7h46wYY.js",
+          "bytes": 4743,
+          "gzipBytes": 2022
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "bytes": 280421,
+          "gzipBytes": 85965
+        },
+        {
+          "name": "executor.worker-C_T3t2Y7.js",
+          "bytes": 64520,
+          "gzipBytes": 16037
+        },
+        {
+          "name": "index-BG3Mhs_m.js",
+          "bytes": 344887,
+          "gzipBytes": 112638
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "bytes": 44116,
+          "gzipBytes": 10276
+        },
+        {
+          "name": "lib-DL8aLXmX.js",
+          "bytes": 6038373,
+          "gzipBytes": 2139568
+        },
+        {
+          "name": "tutor.worker-BYu-MLm1.js",
+          "bytes": 6025487,
+          "gzipBytes": 2136971
+        }
+      ]
+    },
+    "before-final-1": {
+      "measuredAt": "2026-10-13T03:44:35.836Z",
+      "browser": "154.0.8037.57",
+      "environment": "Linux headless Chromium; uncompressed loopback HTTP; isolated empty browser context; no throttling; no WebGPU/model inference measured; CDP ScriptDuration covers main thread only; invalid negative resource timings are null",
+      "homeMs": 592,
+      "editorMs": 439,
+      "coldRunMs": 870,
+      "warmRunMs": [
+        131,
+        124,
+        129
+      ],
+      "reloadEditorMs": 856,
+      "cachedRunMs": 833,
+      "compilerRequestsCold": 3,
+      "compilerRequestsAfterReload": 0,
+      "modelRequests": 0,
+      "metrics": {
+        "ScriptDuration": 0.102074,
+        "TaskDuration": 0.256185,
+        "JSHeapUsedSize": 29021780
+      },
+      "homeResources": [
+        {
+          "name": "index-BG3Mhs_m.js",
+          "durationMs": 15,
+          "transferBytes": 345187
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "durationMs": 13,
+          "transferBytes": 44416
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 13,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 6,
+          "transferBytes": 573
+        }
+      ],
+      "resources": [
+        {
+          "name": "index-BG3Mhs_m.js",
+          "durationMs": 6,
+          "transferBytes": 345187
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "durationMs": 5,
+          "transferBytes": 44416
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 10,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 7,
+          "transferBytes": 573
+        },
+        {
+          "name": "Editor-CspiRix0.js",
+          "durationMs": 25,
+          "transferBytes": 3639919
+        },
+        {
+          "name": "Editor-xM2YrZF0.css",
+          "durationMs": 3,
+          "transferBytes": 146283
+        },
+        {
+          "name": "cpp-C7h46wYY.js",
+          "durationMs": 3,
+          "transferBytes": 5043
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "durationMs": null,
+          "transferBytes": 280721
+        },
+        {
+          "name": "executor.worker-C_T3t2Y7.js",
+          "durationMs": null,
+          "transferBytes": 64820
+        }
+      ],
+      "coldDiagnostics": null,
+      "warmDiagnostics": null,
+      "cachedDiagnostics": null,
+      "assets": [
+        {
+          "name": "Editor-CspiRix0.js",
+          "bytes": 3639619,
+          "gzipBytes": 919782
+        },
+        {
+          "name": "Editor-xM2YrZF0.css",
+          "bytes": 145983,
+          "gzipBytes": 22686
+        },
+        {
+          "name": "cpp-C7h46wYY.js",
+          "bytes": 4743,
+          "gzipBytes": 2022
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "bytes": 280421,
+          "gzipBytes": 85965
+        },
+        {
+          "name": "executor.worker-C_T3t2Y7.js",
+          "bytes": 64520,
+          "gzipBytes": 16037
+        },
+        {
+          "name": "index-BG3Mhs_m.js",
+          "bytes": 344887,
+          "gzipBytes": 112638
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "bytes": 44116,
+          "gzipBytes": 10276
+        },
+        {
+          "name": "lib-DL8aLXmX.js",
+          "bytes": 6038373,
+          "gzipBytes": 2139568
+        },
+        {
+          "name": "tutor.worker-BYu-MLm1.js",
+          "bytes": 6025487,
+          "gzipBytes": 2136971
+        }
+      ]
+    },
+    "before-final-2": {
+      "measuredAt": "2026-10-13T03:44:41.108Z",
+      "browser": "154.0.8037.57",
+      "environment": "Linux headless Chromium; uncompressed loopback HTTP; isolated empty browser context; no throttling; no WebGPU/model inference measured; CDP ScriptDuration covers main thread only; invalid negative resource timings are null",
+      "homeMs": 592,
+      "editorMs": 549,
+      "coldRunMs": 894,
+      "warmRunMs": [
+        129,
+        133,
+        130
+      ],
+      "reloadEditorMs": 869,
+      "cachedRunMs": 840,
+      "compilerRequestsCold": 3,
+      "compilerRequestsAfterReload": 0,
+      "modelRequests": 0,
+      "metrics": {
+        "ScriptDuration": 0.106824,
+        "TaskDuration": 0.269453,
+        "JSHeapUsedSize": 29097152
+      },
+      "homeResources": [
+        {
+          "name": "index-BG3Mhs_m.js",
+          "durationMs": 15,
+          "transferBytes": 345187
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "durationMs": 14,
+          "transferBytes": 44416
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 12,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 7,
+          "transferBytes": 573
+        }
+      ],
+      "resources": [
+        {
+          "name": "index-BG3Mhs_m.js",
+          "durationMs": 6,
+          "transferBytes": 345187
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "durationMs": 5,
+          "transferBytes": 44416
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 5,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 4,
+          "transferBytes": 573
+        },
+        {
+          "name": "Editor-CspiRix0.js",
+          "durationMs": 23,
+          "transferBytes": 3639919
+        },
+        {
+          "name": "Editor-xM2YrZF0.css",
+          "durationMs": 2,
+          "transferBytes": 146283
+        },
+        {
+          "name": "cpp-C7h46wYY.js",
+          "durationMs": 4,
+          "transferBytes": 5043
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "durationMs": null,
+          "transferBytes": 280721
+        },
+        {
+          "name": "executor.worker-C_T3t2Y7.js",
+          "durationMs": null,
+          "transferBytes": 64820
+        }
+      ],
+      "coldDiagnostics": null,
+      "warmDiagnostics": null,
+      "cachedDiagnostics": null,
+      "assets": [
+        {
+          "name": "Editor-CspiRix0.js",
+          "bytes": 3639619,
+          "gzipBytes": 919782
+        },
+        {
+          "name": "Editor-xM2YrZF0.css",
+          "bytes": 145983,
+          "gzipBytes": 22686
+        },
+        {
+          "name": "cpp-C7h46wYY.js",
+          "bytes": 4743,
+          "gzipBytes": 2022
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "bytes": 280421,
+          "gzipBytes": 85965
+        },
+        {
+          "name": "executor.worker-C_T3t2Y7.js",
+          "bytes": 64520,
+          "gzipBytes": 16037
+        },
+        {
+          "name": "index-BG3Mhs_m.js",
+          "bytes": 344887,
+          "gzipBytes": 112638
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "bytes": 44116,
+          "gzipBytes": 10276
+        },
+        {
+          "name": "lib-DL8aLXmX.js",
+          "bytes": 6038373,
+          "gzipBytes": 2139568
+        },
+        {
+          "name": "tutor.worker-BYu-MLm1.js",
+          "bytes": 6025487,
+          "gzipBytes": 2136971
+        }
+      ]
+    },
+    "before-final-3": {
+      "measuredAt": "2026-10-13T03:44:46.802Z",
+      "browser": "154.0.8037.57",
+      "environment": "Linux headless Chromium; uncompressed loopback HTTP; isolated empty browser context; no throttling; no WebGPU/model inference measured; CDP ScriptDuration covers main thread only; invalid negative resource timings are null",
+      "homeMs": 1056,
+      "editorMs": 554,
+      "coldRunMs": 873,
+      "warmRunMs": [
+        129,
+        124,
+        124
+      ],
+      "reloadEditorMs": 858,
+      "cachedRunMs": 838,
+      "compilerRequestsCold": 3,
+      "compilerRequestsAfterReload": 0,
+      "modelRequests": 0,
+      "metrics": {
+        "ScriptDuration": 0.099127,
+        "TaskDuration": 0.239886,
+        "JSHeapUsedSize": 28997964
+      },
+      "homeResources": [
+        {
+          "name": "index-BG3Mhs_m.js",
+          "durationMs": 16,
+          "transferBytes": 345187
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "durationMs": 13,
+          "transferBytes": 44416
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 7,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 3,
+          "transferBytes": 573
+        }
+      ],
+      "resources": [
+        {
+          "name": "index-BG3Mhs_m.js",
+          "durationMs": 7,
+          "transferBytes": 345187
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "durationMs": 4,
+          "transferBytes": 44416
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 6,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 6,
+          "transferBytes": 573
+        },
+        {
+          "name": "Editor-CspiRix0.js",
+          "durationMs": 18,
+          "transferBytes": 3639919
+        },
+        {
+          "name": "Editor-xM2YrZF0.css",
+          "durationMs": 3,
+          "transferBytes": 146283
+        },
+        {
+          "name": "cpp-C7h46wYY.js",
+          "durationMs": 2,
+          "transferBytes": 5043
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "durationMs": null,
+          "transferBytes": 280721
+        },
+        {
+          "name": "executor.worker-C_T3t2Y7.js",
+          "durationMs": null,
+          "transferBytes": 64820
+        }
+      ],
+      "coldDiagnostics": null,
+      "warmDiagnostics": null,
+      "cachedDiagnostics": null,
+      "assets": [
+        {
+          "name": "Editor-CspiRix0.js",
+          "bytes": 3639619,
+          "gzipBytes": 919782
+        },
+        {
+          "name": "Editor-xM2YrZF0.css",
+          "bytes": 145983,
+          "gzipBytes": 22686
+        },
+        {
+          "name": "cpp-C7h46wYY.js",
+          "bytes": 4743,
+          "gzipBytes": 2022
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "bytes": 280421,
+          "gzipBytes": 85965
+        },
+        {
+          "name": "executor.worker-C_T3t2Y7.js",
+          "bytes": 64520,
+          "gzipBytes": 16037
+        },
+        {
+          "name": "index-BG3Mhs_m.js",
+          "bytes": 344887,
+          "gzipBytes": 112638
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "bytes": 44116,
+          "gzipBytes": 10276
+        },
+        {
+          "name": "lib-DL8aLXmX.js",
+          "bytes": 6038373,
+          "gzipBytes": 2139568
+        },
+        {
+          "name": "tutor.worker-BYu-MLm1.js",
+          "bytes": 6025487,
+          "gzipBytes": 2136971
+        }
+      ]
+    },
+    "after-final-1": {
+      "measuredAt": "2026-10-13T03:47:36.430Z",
+      "browser": "154.0.8037.57",
+      "environment": "Linux headless Chromium; uncompressed loopback HTTP; isolated empty browser context; no throttling; no WebGPU/model inference measured; CDP ScriptDuration covers main thread only; invalid negative resource timings are null",
+      "homeMs": 618,
+      "editorMs": 525,
+      "coldRunMs": 867,
+      "warmRunMs": [
+        128,
+        150,
+        125
+      ],
+      "reloadEditorMs": 900,
+      "cachedRunMs": 866,
+      "compilerRequestsCold": 3,
+      "compilerRequestsAfterReload": 0,
+      "modelRequests": 0,
+      "metrics": {
+        "ScriptDuration": 0.093713,
+        "TaskDuration": 0.272065,
+        "JSHeapUsedSize": 25390964
+      },
+      "homeResources": [
+        {
+          "name": "index-Tvnl7oaf.js",
+          "durationMs": 19,
+          "transferBytes": 357763
+        },
+        {
+          "name": "index-DkFYfsM8.css",
+          "durationMs": 12,
+          "transferBytes": 45418
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 8,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 5,
+          "transferBytes": 573
+        }
+      ],
+      "resources": [
+        {
+          "name": "index-Tvnl7oaf.js",
+          "durationMs": 6,
+          "transferBytes": 357763
+        },
+        {
+          "name": "index-DkFYfsM8.css",
+          "durationMs": 5,
+          "transferBytes": 45418
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 5,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 1,
+          "transferBytes": 573
+        },
+        {
+          "name": "Editor-Bc9fUO_K.js",
+          "durationMs": 15,
+          "transferBytes": 2867094
+        },
+        {
+          "name": "Editor-CtNSy7yg.css",
+          "durationMs": 2,
+          "transferBytes": 93320
+        },
+        {
+          "name": "executor.worker-DikAjwNF.js",
+          "durationMs": null,
+          "transferBytes": 67892
+        }
+      ],
+      "coldDiagnostics": "本次编译环境与性能诊断正在检查 clang 的浏览器缓存…正在检查 lld 的浏览器缓存…正在检查 sysroot.tar 的浏览器缓存…正在下载 clang…正在下载 lld…正在下载 sysroot.tar…正在校验 sysroot.tar 下载内容的 SHA-256… · 105 ms正在校验 lld 下载内容的 SHA-256… · 132 ms正在展开并检查 C 标准库…正在校验 clang 下载内容的 SHA-256… · 193 ms正在准备 lld WebAssembly 模块…正在准备 clang WebAssembly 模块…编译器已准备好，可以运行 C/C++ 代码。 · 373 ms主线程观测：环境准备400 ms主线程观测：编译171 ms主线程观测：链接25 ms主线程观测：运行1 msclang · 缓存读取4 mslld · 缓存读取4 mssysroot.tar · 缓存读取4 mssysroot.tar · 网络下载与读取105 mssysroot.tar · 下载 SHA-2569 mslld · 网络下载与读取132 mslld · 下载 SHA-25618 mssysroot.tar · 缓存写入67 mssysroot.tar · 标准库展开8 msclang · 网络下载与读取193 msclang · 下载 SHA-25629 mslld · 缓存写入102 mslld · WASM 编译初始化32 msclang · 缓存写入98 msclang · WASM 编译初始化49 ms资源准备（并行总耗时）373 ms隔离文件系统复制13 msC 编译与编译器实例化171 ms链接与链接器实例化25 ms程序 WASM 编译0 ms程序实例化与执行1 msWorker 总耗时583 ms资源与 Worker 子阶段为内部计时，主线程另记录消息观测耗时；并行阶段与总耗时有重叠，不能相加。缓存读取后仍需校验与 WASM 初始化；取消或超时会销毁 Worker，下次从浏览器缓存恢复。不会删除学习数据库。",
+      "warmDiagnostics": "本次编译环境与性能诊断已复用当前页面内存中的编译器，无需重新下载或编译工具。主线程观测：环境准备16 ms主线程观测：编译28 ms主线程观测：链接12 ms主线程观测：运行2 ms资源准备（并行总耗时）0 ms隔离文件系统复制12 msC 编译与编译器实例化30 ms链接与链接器实例化12 ms程序 WASM 编译1 ms程序实例化与执行2 msWorker 总耗时58 ms资源与 Worker 子阶段为内部计时，主线程另记录消息观测耗时；并行阶段与总耗时有重叠，不能相加。缓存读取后仍需校验与 WASM 初始化；取消或超时会销毁 Worker，下次从浏览器缓存恢复。不会删除学习数据库。",
+      "cachedDiagnostics": "本次编译环境与性能诊断正在检查 clang 的浏览器缓存…正在检查 lld 的浏览器缓存…正在检查 sysroot.tar 的浏览器缓存…命中 sysroot.tar 缓存，正在校验 SHA-256…正在展开并检查 C 标准库…命中 lld 缓存，正在校验 SHA-256…正在准备 lld WebAssembly 模块…命中 clang 缓存，正在校验 SHA-256…正在准备 clang WebAssembly 模块…编译器已准备好，可以运行 C/C++ 代码。 · 201 ms主线程观测：环境准备230 ms主线程观测：编译178 ms主线程观测：链接26 ms主线程观测：运行1 mssysroot.tar · 缓存读取20 mssysroot.tar · 缓存 SHA-2569 mssysroot.tar · 标准库展开8 mslld · 缓存读取50 mslld · 缓存 SHA-25618 mslld · WASM 编译初始化40 msclang · 缓存读取109 msclang · 缓存 SHA-25629 msclang · WASM 编译初始化63 ms资源准备（并行总耗时）201 ms隔离文件系统复制12 msC 编译与编译器实例化180 ms链接与链接器实例化26 ms程序 WASM 编译0 ms程序实例化与执行1 msWorker 总耗时420 ms资源与 Worker 子阶段为内部计时，主线程另记录消息观测耗时；并行阶段与总耗时有重叠，不能相加。缓存读取后仍需校验与 WASM 初始化；取消或超时会销毁 Worker，下次从浏览器缓存恢复。不会删除学习数据库。",
+      "assets": [
+        {
+          "name": "Editor-Bc9fUO_K.js",
+          "bytes": 2866794,
+          "gzipBytes": 724928
+        },
+        {
+          "name": "Editor-CtNSy7yg.css",
+          "bytes": 93020,
+          "gzipBytes": 14691
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "bytes": 280421,
+          "gzipBytes": 85965
+        },
+        {
+          "name": "executor.worker-DikAjwNF.js",
+          "bytes": 67592,
+          "gzipBytes": 17324
+        },
+        {
+          "name": "index-DkFYfsM8.css",
+          "bytes": 45118,
+          "gzipBytes": 10451
+        },
+        {
+          "name": "index-Tvnl7oaf.js",
+          "bytes": 357463,
+          "gzipBytes": 116671
+        },
+        {
+          "name": "tutor.worker-D7TjTgtI.js",
+          "bytes": 6024503,
+          "gzipBytes": 2137893
+        }
+      ]
+    },
+    "after-final-2": {
+      "measuredAt": "2026-10-13T03:47:41.628Z",
+      "browser": "154.0.8037.57",
+      "environment": "Linux headless Chromium; uncompressed loopback HTTP; isolated empty browser context; no throttling; no WebGPU/model inference measured; CDP ScriptDuration covers main thread only; invalid negative resource timings are null",
+      "homeMs": 614,
+      "editorMs": 561,
+      "coldRunMs": 890,
+      "warmRunMs": [
+        130,
+        123,
+        137
+      ],
+      "reloadEditorMs": 866,
+      "cachedRunMs": 877,
+      "compilerRequestsCold": 3,
+      "compilerRequestsAfterReload": 0,
+      "modelRequests": 0,
+      "metrics": {
+        "ScriptDuration": 0.109294,
+        "TaskDuration": 0.29458,
+        "JSHeapUsedSize": 25425068
+      },
+      "homeResources": [
+        {
+          "name": "index-Tvnl7oaf.js",
+          "durationMs": 22,
+          "transferBytes": 357763
+        },
+        {
+          "name": "index-DkFYfsM8.css",
+          "durationMs": 18,
+          "transferBytes": 45418
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 10,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 4,
+          "transferBytes": 573
+        }
+      ],
+      "resources": [
+        {
+          "name": "index-Tvnl7oaf.js",
+          "durationMs": 8,
+          "transferBytes": 357763
+        },
+        {
+          "name": "index-DkFYfsM8.css",
+          "durationMs": 5,
+          "transferBytes": 45418
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 7,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 5,
+          "transferBytes": 573
+        },
+        {
+          "name": "Editor-Bc9fUO_K.js",
+          "durationMs": 26,
+          "transferBytes": 2867094
+        },
+        {
+          "name": "Editor-CtNSy7yg.css",
+          "durationMs": 4,
+          "transferBytes": 93320
+        },
+        {
+          "name": "executor.worker-DikAjwNF.js",
+          "durationMs": null,
+          "transferBytes": 67892
+        }
+      ],
+      "coldDiagnostics": "本次编译环境与性能诊断正在检查 clang 的浏览器缓存…正在检查 lld 的浏览器缓存…正在检查 sysroot.tar 的浏览器缓存…正在下载 clang…正在下载 lld…正在下载 sysroot.tar…正在校验 sysroot.tar 下载内容的 SHA-256… · 82 ms正在校验 lld 下载内容的 SHA-256… · 141 ms正在展开并检查 C 标准库…正在校验 clang 下载内容的 SHA-256… · 206 ms正在准备 lld WebAssembly 模块…正在准备 clang WebAssembly 模块…编译器已准备好，可以运行 C/C++ 代码。 · 431 ms主线程观测：环境准备457 ms主线程观测：编译194 ms主线程观测：链接26 ms主线程观测：运行1 msclang · 缓存读取5 mslld · 缓存读取6 mssysroot.tar · 缓存读取6 mssysroot.tar · 网络下载与读取82 mssysroot.tar · 下载 SHA-2569 mslld · 网络下载与读取141 mslld · 下载 SHA-25617 mssysroot.tar · 缓存写入88 mssysroot.tar · 标准库展开13 msclang · 网络下载与读取206 msclang · 下载 SHA-25629 mslld · 缓存写入110 mslld · WASM 编译初始化42 msclang · 缓存写入121 msclang · WASM 编译初始化70 ms资源准备（并行总耗时）431 ms隔离文件系统复制12 msC 编译与编译器实例化194 ms链接与链接器实例化25 ms程序 WASM 编译0 ms程序实例化与执行1 msWorker 总耗时664 ms资源与 Worker 子阶段为内部计时，主线程另记录消息观测耗时；并行阶段与总耗时有重叠，不能相加。缓存读取后仍需校验与 WASM 初始化；取消或超时会销毁 Worker，下次从浏览器缓存恢复。不会删除学习数据库。",
+      "warmDiagnostics": "本次编译环境与性能诊断已复用当前页面内存中的编译器，无需重新下载或编译工具。主线程观测：环境准备15 ms主线程观测：编译22 ms主线程观测：链接11 ms主线程观测：运行3 ms资源准备（并行总耗时）0 ms隔离文件系统复制11 msC 编译与编译器实例化26 ms链接与链接器实例化11 ms程序 WASM 编译1 ms程序实例化与执行3 msWorker 总耗时51 ms资源与 Worker 子阶段为内部计时，主线程另记录消息观测耗时；并行阶段与总耗时有重叠，不能相加。缓存读取后仍需校验与 WASM 初始化；取消或超时会销毁 Worker，下次从浏览器缓存恢复。不会删除学习数据库。",
+      "cachedDiagnostics": "本次编译环境与性能诊断正在检查 clang 的浏览器缓存…正在检查 lld 的浏览器缓存…正在检查 sysroot.tar 的浏览器缓存…命中 sysroot.tar 缓存，正在校验 SHA-256…正在展开并检查 C 标准库…命中 lld 缓存，正在校验 SHA-256…正在准备 lld WebAssembly 模块…命中 clang 缓存，正在校验 SHA-256…正在准备 clang WebAssembly 模块…编译器已准备好，可以运行 C/C++ 代码。 · 196 ms主线程观测：环境准备227 ms主线程观测：编译195 ms主线程观测：链接32 ms主线程观测：运行1 mssysroot.tar · 缓存读取35 mssysroot.tar · 缓存 SHA-2569 mssysroot.tar · 标准库展开8 mslld · 缓存读取53 mslld · 缓存 SHA-25620 msclang · 缓存读取111 msclang · 缓存 SHA-25629 mslld · WASM 编译初始化79 msclang · WASM 编译初始化55 ms资源准备（并行总耗时）196 ms隔离文件系统复制13 msC 编译与编译器实例化195 ms链接与链接器实例化30 ms程序 WASM 编译0 ms程序实例化与执行1 msWorker 总耗时436 ms资源与 Worker 子阶段为内部计时，主线程另记录消息观测耗时；并行阶段与总耗时有重叠，不能相加。缓存读取后仍需校验与 WASM 初始化；取消或超时会销毁 Worker，下次从浏览器缓存恢复。不会删除学习数据库。",
+      "assets": [
+        {
+          "name": "Editor-Bc9fUO_K.js",
+          "bytes": 2866794,
+          "gzipBytes": 724928
+        },
+        {
+          "name": "Editor-CtNSy7yg.css",
+          "bytes": 93020,
+          "gzipBytes": 14691
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "bytes": 280421,
+          "gzipBytes": 85965
+        },
+        {
+          "name": "executor.worker-DikAjwNF.js",
+          "bytes": 67592,
+          "gzipBytes": 17324
+        },
+        {
+          "name": "index-DkFYfsM8.css",
+          "bytes": 45118,
+          "gzipBytes": 10451
+        },
+        {
+          "name": "index-Tvnl7oaf.js",
+          "bytes": 357463,
+          "gzipBytes": 116671
+        },
+        {
+          "name": "tutor.worker-D7TjTgtI.js",
+          "bytes": 6024503,
+          "gzipBytes": 2137893
+        }
+      ]
+    },
+    "after-final-3": {
+      "measuredAt": "2026-10-13T03:47:46.771Z",
+      "browser": "154.0.8037.57",
+      "environment": "Linux headless Chromium; uncompressed loopback HTTP; isolated empty browser context; no throttling; no WebGPU/model inference measured; CDP ScriptDuration covers main thread only; invalid negative resource timings are null",
+      "homeMs": 633,
+      "editorMs": 549,
+      "coldRunMs": 883,
+      "warmRunMs": [
+        110,
+        134,
+        130
+      ],
+      "reloadEditorMs": 900,
+      "cachedRunMs": 859,
+      "compilerRequestsCold": 3,
+      "compilerRequestsAfterReload": 0,
+      "modelRequests": 0,
+      "metrics": {
+        "ScriptDuration": 0.094469,
+        "TaskDuration": 0.270922,
+        "JSHeapUsedSize": 25341460
+      },
+      "homeResources": [
+        {
+          "name": "index-Tvnl7oaf.js",
+          "durationMs": 17,
+          "transferBytes": 357763
+        },
+        {
+          "name": "index-DkFYfsM8.css",
+          "durationMs": 12,
+          "transferBytes": 45418
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 7,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 6,
+          "transferBytes": 573
+        }
+      ],
+      "resources": [
+        {
+          "name": "index-Tvnl7oaf.js",
+          "durationMs": 6,
+          "transferBytes": 357763
+        },
+        {
+          "name": "index-DkFYfsM8.css",
+          "durationMs": 3,
+          "transferBytes": 45418
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 5,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 4,
+          "transferBytes": 573
+        },
+        {
+          "name": "Editor-Bc9fUO_K.js",
+          "durationMs": 22,
+          "transferBytes": 2867094
+        },
+        {
+          "name": "Editor-CtNSy7yg.css",
+          "durationMs": 2,
+          "transferBytes": 93320
+        },
+        {
+          "name": "executor.worker-DikAjwNF.js",
+          "durationMs": null,
+          "transferBytes": 67892
+        }
+      ],
+      "coldDiagnostics": "本次编译环境与性能诊断正在检查 clang 的浏览器缓存…正在检查 lld 的浏览器缓存…正在检查 sysroot.tar 的浏览器缓存…正在下载 clang…正在下载 lld…正在下载 sysroot.tar…正在校验 sysroot.tar 下载内容的 SHA-256… · 82 ms正在展开并检查 C 标准库…正在校验 lld 下载内容的 SHA-256… · 165 ms正在校验 clang 下载内容的 SHA-256… · 217 ms正在准备 lld WebAssembly 模块…正在准备 clang WebAssembly 模块…编译器已准备好，可以运行 C/C++ 代码。 · 407 ms主线程观测：环境准备440 ms主线程观测：编译178 ms主线程观测：链接30 ms主线程观测：运行1 msclang · 缓存读取4 mslld · 缓存读取5 mssysroot.tar · 缓存读取5 mssysroot.tar · 网络下载与读取82 mssysroot.tar · 下载 SHA-25610 mssysroot.tar · 缓存写入65 mssysroot.tar · 标准库展开8 mslld · 网络下载与读取165 mslld · 下载 SHA-25618 msclang · 网络下载与读取217 msclang · 下载 SHA-25629 mslld · 缓存写入98 mslld · WASM 编译初始化43 msclang · 缓存写入103 msclang · WASM 编译初始化53 ms资源准备（并行总耗时）407 ms隔离文件系统复制14 msC 编译与编译器实例化177 ms链接与链接器实例化29 ms程序 WASM 编译0 ms程序实例化与执行1 msWorker 总耗时629 ms资源与 Worker 子阶段为内部计时，主线程另记录消息观测耗时；并行阶段与总耗时有重叠，不能相加。缓存读取后仍需校验与 WASM 初始化；取消或超时会销毁 Worker，下次从浏览器缓存恢复。不会删除学习数据库。",
+      "warmDiagnostics": "本次编译环境与性能诊断已复用当前页面内存中的编译器，无需重新下载或编译工具。主线程观测：环境准备17 ms主线程观测：编译27 ms主线程观测：链接13 ms主线程观测：运行1 ms资源准备（并行总耗时）0 ms隔离文件系统复制13 msC 编译与编译器实例化31 ms链接与链接器实例化12 ms程序 WASM 编译1 ms程序实例化与执行1 msWorker 总耗时58 ms资源与 Worker 子阶段为内部计时，主线程另记录消息观测耗时；并行阶段与总耗时有重叠，不能相加。缓存读取后仍需校验与 WASM 初始化；取消或超时会销毁 Worker，下次从浏览器缓存恢复。不会删除学习数据库。",
+      "cachedDiagnostics": "本次编译环境与性能诊断正在检查 clang 的浏览器缓存…正在检查 lld 的浏览器缓存…正在检查 sysroot.tar 的浏览器缓存…命中 sysroot.tar 缓存，正在校验 SHA-256…正在展开并检查 C 标准库…命中 lld 缓存，正在校验 SHA-256…正在准备 lld WebAssembly 模块…命中 clang 缓存，正在校验 SHA-256…正在准备 clang WebAssembly 模块…编译器已准备好，可以运行 C/C++ 代码。 · 192 ms主线程观测：环境准备219 ms主线程观测：编译193 ms主线程观测：链接25 ms主线程观测：运行1 mssysroot.tar · 缓存读取23 mssysroot.tar · 缓存 SHA-25610 mssysroot.tar · 标准库展开9 mslld · 缓存读取57 mslld · 缓存 SHA-25619 msclang · 缓存读取106 msclang · 缓存 SHA-25631 mslld · WASM 编译初始化72 msclang · WASM 编译初始化55 ms资源准备（并行总耗时）192 ms隔离文件系统复制13 msC 编译与编译器实例化190 ms链接与链接器实例化26 ms程序 WASM 编译0 ms程序实例化与执行1 msWorker 总耗时423 ms资源与 Worker 子阶段为内部计时，主线程另记录消息观测耗时；并行阶段与总耗时有重叠，不能相加。缓存读取后仍需校验与 WASM 初始化；取消或超时会销毁 Worker，下次从浏览器缓存恢复。不会删除学习数据库。",
+      "assets": [
+        {
+          "name": "Editor-Bc9fUO_K.js",
+          "bytes": 2866794,
+          "gzipBytes": 724928
+        },
+        {
+          "name": "Editor-CtNSy7yg.css",
+          "bytes": 93020,
+          "gzipBytes": 14691
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "bytes": 280421,
+          "gzipBytes": 85965
+        },
+        {
+          "name": "executor.worker-DikAjwNF.js",
+          "bytes": 67592,
+          "gzipBytes": 17324
+        },
+        {
+          "name": "index-DkFYfsM8.css",
+          "bytes": 45118,
+          "gzipBytes": 10451
+        },
+        {
+          "name": "index-Tvnl7oaf.js",
+          "bytes": 357463,
+          "gzipBytes": 116671
+        },
+        {
+          "name": "tutor.worker-D7TjTgtI.js",
+          "bytes": 6024503,
+          "gzipBytes": 2137893
+        }
+      ]
+    },
+    "before-throttled": {
+      "measuredAt": "2026-10-13T03:50:27.610Z",
+      "browser": "154.0.8037.57",
+      "environment": "Linux headless Chromium; uncompressed loopback HTTP; isolated empty browser context; no WebGPU/model inference measured; CDP ScriptDuration covers main thread only; invalid negative resource timings are null",
+      "networkProfile": {
+        "latency": 100,
+        "downloadThroughput": 1048576,
+        "uploadThroughput": 1048576
+      },
+      "editorOnly": true,
+      "homeMs": 2323,
+      "editorMs": 4440,
+      "coldRunMs": null,
+      "warmRunMs": [],
+      "reloadEditorMs": 5438,
+      "cachedRunMs": null,
+      "compilerRequestsCold": 0,
+      "compilerRequestsAfterReload": 0,
+      "modelRequests": 0,
+      "metrics": {
+        "ScriptDuration": 0.09454,
+        "TaskDuration": 0.266061,
+        "JSHeapUsedSize": 16819604
+      },
+      "homeResources": [
+        {
+          "name": "index-BG3Mhs_m.js",
+          "durationMs": 479,
+          "transferBytes": 345187
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "durationMs": 190,
+          "transferBytes": 44416
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 732,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 104,
+          "transferBytes": 573
+        }
+      ],
+      "resources": [
+        {
+          "name": "index-BG3Mhs_m.js",
+          "durationMs": 476,
+          "transferBytes": 345187
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "durationMs": 187,
+          "transferBytes": 44416
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 732,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 104,
+          "transferBytes": 573
+        },
+        {
+          "name": "Editor-CspiRix0.js",
+          "durationMs": 3712,
+          "transferBytes": 3639919
+        },
+        {
+          "name": "Editor-xM2YrZF0.css",
+          "durationMs": 381,
+          "transferBytes": 146283
+        },
+        {
+          "name": "cpp-C7h46wYY.js",
+          "durationMs": 108,
+          "transferBytes": 5043
+        }
+      ],
+      "coldDiagnostics": null,
+      "warmDiagnostics": null,
+      "cachedDiagnostics": null,
+      "assets": [
+        {
+          "name": "Editor-CspiRix0.js",
+          "bytes": 3639619,
+          "gzipBytes": 919782
+        },
+        {
+          "name": "Editor-xM2YrZF0.css",
+          "bytes": 145983,
+          "gzipBytes": 22686
+        },
+        {
+          "name": "cpp-C7h46wYY.js",
+          "bytes": 4743,
+          "gzipBytes": 2022
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "bytes": 280421,
+          "gzipBytes": 85965
+        },
+        {
+          "name": "executor.worker-C_T3t2Y7.js",
+          "bytes": 64520,
+          "gzipBytes": 16037
+        },
+        {
+          "name": "index-BG3Mhs_m.js",
+          "bytes": 344887,
+          "gzipBytes": 112638
+        },
+        {
+          "name": "index-Cx4uUmFw.css",
+          "bytes": 44116,
+          "gzipBytes": 10276
+        },
+        {
+          "name": "lib-DL8aLXmX.js",
+          "bytes": 6038373,
+          "gzipBytes": 2139568
+        },
+        {
+          "name": "tutor.worker-BYu-MLm1.js",
+          "bytes": 6025487,
+          "gzipBytes": 2136971
+        }
+      ]
+    },
+    "after-throttled": {
+      "measuredAt": "2026-10-13T03:50:38.768Z",
+      "browser": "154.0.8037.57",
+      "environment": "Linux headless Chromium; uncompressed loopback HTTP; isolated empty browser context; no WebGPU/model inference measured; CDP ScriptDuration covers main thread only; invalid negative resource timings are null",
+      "networkProfile": {
+        "latency": 100,
+        "downloadThroughput": 1048576,
+        "uploadThroughput": 1048576
+      },
+      "editorOnly": true,
+      "homeMs": 2339,
+      "editorMs": 3373,
+      "coldRunMs": null,
+      "warmRunMs": [],
+      "reloadEditorMs": 4432,
+      "cachedRunMs": null,
+      "compilerRequestsCold": 0,
+      "compilerRequestsAfterReload": 0,
+      "modelRequests": 0,
+      "metrics": {
+        "ScriptDuration": 0.100985,
+        "TaskDuration": 0.260223,
+        "JSHeapUsedSize": 21577800
+      },
+      "homeResources": [
+        {
+          "name": "index-Tvnl7oaf.js",
+          "durationMs": 493,
+          "transferBytes": 357763
+        },
+        {
+          "name": "index-DkFYfsM8.css",
+          "durationMs": 195,
+          "transferBytes": 45418
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 732,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 103,
+          "transferBytes": 573
+        }
+      ],
+      "resources": [
+        {
+          "name": "index-Tvnl7oaf.js",
+          "durationMs": 488,
+          "transferBytes": 357763
+        },
+        {
+          "name": "index-DkFYfsM8.css",
+          "durationMs": 190,
+          "transferBytes": 45418
+        },
+        {
+          "name": "sql-wasm.wasm",
+          "durationMs": 734,
+          "transferBytes": 658710
+        },
+        {
+          "name": "favicon.svg",
+          "durationMs": 104,
+          "transferBytes": 573
+        },
+        {
+          "name": "Editor-Bc9fUO_K.js",
+          "durationMs": 2931,
+          "transferBytes": 2867094
+        },
+        {
+          "name": "Editor-CtNSy7yg.css",
+          "durationMs": 281,
+          "transferBytes": 93320
+        }
+      ],
+      "coldDiagnostics": null,
+      "warmDiagnostics": null,
+      "cachedDiagnostics": null,
+      "assets": [
+        {
+          "name": "Editor-Bc9fUO_K.js",
+          "bytes": 2866794,
+          "gzipBytes": 724928
+        },
+        {
+          "name": "Editor-CtNSy7yg.css",
+          "bytes": 93020,
+          "gzipBytes": 14691
+        },
+        {
+          "name": "editor.worker-BOfXZGlm.js",
+          "bytes": 280421,
+          "gzipBytes": 85965
+        },
+        {
+          "name": "executor.worker-DikAjwNF.js",
+          "bytes": 67592,
+          "gzipBytes": 17324
+        },
+        {
+          "name": "index-DkFYfsM8.css",
+          "bytes": 45118,
+          "gzipBytes": 10451
+        },
+        {
+          "name": "index-Tvnl7oaf.js",
+          "bytes": 357463,
+          "gzipBytes": 116671
+        },
+        {
+          "name": "tutor.worker-D7TjTgtI.js",
+          "bytes": 6024503,
+          "gzipBytes": 2137893
+        }
+      ]
+    }
+  }
+}

@@ -1,9 +1,11 @@
-import { lazy, Suspense, useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { ArrowRight, BookOpen, Check, ChevronDown, CircleAlert, Code2, Copy, LoaderCircle, Play, RotateCcw, Sparkles, Square, Terminal } from 'lucide-react'
 import { lessons } from '../data/curriculum'
 import { recordAttempt, recommendDifficulty, type LearningSnapshot } from '../services/learning'
-import { runCode, cancelRun, type RunResult } from '../services/executor'
+import { runCode, cancelRun, prepareCompiler, type RunResult, type ExecutionPreparation } from '../services/executor'
 import TutorPanel from '../components/TutorPanel'
+import EditorLoadBoundary from '../components/EditorLoadBoundary'
+import CompilerDiagnostics from '../components/CompilerDiagnostics'
 
 const Editor = lazy(() => import('../components/Editor'))
 const conceptMap: Record<string, string> = { basics: 'syntax', variables: 'variables', 'data-types': 'types', 'input-output': 'io', conditions: 'conditions', loops: 'loops', arrays: 'arrays', functions: 'functions' }
@@ -14,10 +16,14 @@ export default function Lab({ lessonId, snapshot, onUpdate, saved }: {
 }) {
   const lesson = lessons.find((item) => item.id === lessonId) || lessons[0]
   const conceptId = conceptMap[lesson.module] || lesson.module
-  const recommendation = recommendDifficulty(snapshot, conceptId, lesson.difficulty)
+  const recommendation = useMemo(() => recommendDifficulty(snapshot, conceptId, lesson.difficulty), [snapshot.attempts, conceptId, lesson.difficulty])
   const [code, setCode] = useState(snapshot.drafts[lesson.id] ?? lesson.starterCode)
   const [stdin, setStdin] = useState(lesson.stdin)
   const [running, setRunning] = useState(false)
+  const [preparing, setPreparing] = useState(false)
+  const [preparationEvents, setPreparationEvents] = useState<ExecutionPreparation[]>([])
+  const [timings, setTimings] = useState<Record<string, number>>()
+  const busy = useRef(false)
   const [result, setResult] = useState<RunResult | null>(null)
   const [resultInput, setResultInput] = useState('')
   const [resultCode, setResultCode] = useState('')
@@ -54,17 +60,42 @@ export default function Lab({ lessonId, snapshot, onUpdate, saved }: {
     onUpdate((current) => ({ ...current, drafts: { ...current.drafts, [lesson.id]: value } }))
   }
 
+  const reportPreparation = (event: ExecutionPreparation) => {
+    if (!mounted.current) return
+    setPhase(event.message)
+    setPreparationEvents(current => [...current.slice(-63), event])
+  }
+
+  const prepare = async () => {
+    if (busy.current) return
+    busy.current = true
+    setPreparing(true); setPreparationEvents([]); setTimings(undefined)
+    setPhase('正在检查编译工具缓存…')
+    setNotice('仅缺少或损坏的编译资源需要下载；完整工具约 58 MiB。课程和编辑器仍可使用。')
+    try {
+      const prepared = await prepareCompiler({ onPreparation: reportPreparation })
+      if (!mounted.current) return
+      setTimings(prepared.timings)
+      setNotice(prepared.status === 'success' ? '编译环境已准备完成。接下来运行代码会复用内存中的工具。' : prepared.status === 'cancelled' ? '编译环境准备已取消；已写入浏览器的资源缓存保留。' : `编译环境准备失败：${prepared.stderr}`)
+    } catch (error) {
+      if (mounted.current) setNotice(`准备失败：${error instanceof Error ? error.message : '请检查网络和浏览器存储空间。'}`)
+    } finally { busy.current = false; if (mounted.current) setPreparing(false) }
+  }
+
   const run = async () => {
-    if (running) return
-    setRunning(true); setNotice('首次运行会下载约 58 MB 的编译工具，之后会使用浏览器缓存。'); activeAt.current = Date.now()
+    if (busy.current) return
+    busy.current = true
+    setRunning(true); setPreparationEvents([]); setTimings(undefined); setPhase('正在检查编译工具缓存…')
+    setNotice('正在准备运行；优先复用已准备的工具和浏览器缓存。'); activeAt.current = Date.now()
     try {
       const executedCode = code
       const executedInput = stdin
       const executedIndependent = independent
-      const output = await runCode({ code: executedCode, stdin: executedInput, onPhase: (current) => {
+      const output = await runCode({ code: executedCode, stdin: executedInput, onPreparation: reportPreparation, onPhase: (current) => {
         if (mounted.current) setPhase(({ loading: '正在加载编译工具…', compiling: '正在编译 C 代码…', linking: '正在链接程序…', running: '正在运行程序…' })[current])
       } })
       if (!mounted.current) return
+      setTimings(output.timings)
       setResult(output); setResultInput(executedInput); setResultCode(executedCode); setTab(output.status === 'compile-error' || output.status === 'runtime-error' || output.status === 'environment-error' ? 'errors' : 'output')
       if (output.status === 'cancelled') { setNotice('运行已停止。'); return }
       if (output.status === 'environment-error') { setNotice('编译工具暂不可用，请检查网络后重试。本次不会计入学习评估。'); return }
@@ -81,7 +112,7 @@ export default function Lab({ lessonId, snapshot, onUpdate, saved }: {
       setNotice(executedInput !== lesson.stdin ? '自定义输入已运行，本次不计入课程样例评分。' : passed ? '练习通过！结果已记录，可以继续优化或向导师自由提问。' : output.status === 'success' ? '程序运行完成。切换「测试」对照题目要求，也可以直接询问导师。' : '遇到问题了吗？先读第一个错误，也可以把你的疑问直接告诉导师。')
     } catch (error) {
       if (mounted.current) setNotice(`编译工具加载失败：${error instanceof Error ? error.message : '请检查网络后重试'}。学习课程和编辑代码仍然可用。`)
-    } finally { if (mounted.current) setRunning(false) }
+    } finally { busy.current = false; if (mounted.current) setRunning(false) }
   }
 
   const copyOutput = async () => {
@@ -91,13 +122,16 @@ export default function Lab({ lessonId, snapshot, onUpdate, saved }: {
   const testPassed = result?.status === 'success' && normalize(result.stdout) === normalize(lesson.expectedOutput) && resultInput === lesson.stdin
   return <div className="lab-page"><div className="lab-heading"><div><div className="eyebrow"><BookOpen size={13} />C 语言 · {lesson.title}</div><h1>代码实验室 <span>在尝试中，找到答案</span></h1></div><div className="lab-heading-actions"><span className="tag">难度 {recommendation.difficulty}/5</span><button className="secondary-button tutor-toggle" onClick={() => setChatVisible(!chatVisible)}><Sparkles size={15} />导师</button><button className="text-button" onClick={() => setShowTask(!showTask)}>{showTask ? '收起任务' : '查看任务'}<ChevronDown size={14} /></button></div></div>
     {showTask && <div className="lab-task"><span className="task-icon"><TargetIcon /></span><div><strong>{lesson.description}</strong><p>{lesson.objectives.join(' · ')}</p></div><span className="tag tag-green">{snapshot.completedIds.includes(lesson.id) ? '已完成 · 可复练' : '亲手实践'}</span></div>}
-    <div className="lab-workbench"><section className="editor-panel panel"><div className="editor-toolbar"><span><Code2 size={16} />main.c <small>C</small></span><div><button className="icon-button" title="重置代码" aria-label="重置代码" onClick={() => setDialog('reset')}><RotateCcw size={15} /></button>{running ? <button className="stop-button" onClick={() => cancelRun()}><Square size={13} />停止</button> : <button className="run-button" onClick={() => void run()}><Play size={13} fill="currentColor" />运行 <kbd>Ctrl ↵</kbd></button>}</div></div>
-      <div className="editor-body"><Suspense fallback={<div className="editor-loading">正在加载编辑器…</div>}><Editor code={code} onChange={edit} onRun={() => void run()} /></Suspense></div><div className="editor-bottom"><span><span className="status-dot" />{saved ? '草稿已保存' : '保存中'}</span><span>C11 · UTF-8 · WASI</span></div></section>
+    <div className="lab-workbench"><section className="editor-panel panel"><div className="editor-toolbar"><span><Code2 size={16} />main.c <small>C</small></span><div><button className="icon-button" title="重置代码" aria-label="重置代码" onClick={() => setDialog('reset')}><RotateCcw size={15} /></button>{running ? <button className="stop-button" onClick={() => cancelRun()}><Square size={13} />停止</button> : <button className="run-button" disabled={preparing} onClick={() => void run()}><Play size={13} fill="currentColor" />运行 <kbd>Ctrl ↵</kbd></button>}</div></div>
+      <div className="editor-body"><EditorLoadBoundary><Suspense fallback={<div className="editor-loading" role="status">正在下载编辑器脚本，随后初始化 C 语言编辑环境…</div>}><Editor code={code} onChange={edit} onRun={() => void run()} /></Suspense></EditorLoadBoundary></div><div className="editor-bottom"><span><span className="status-dot" />{saved ? '草稿已保存' : '保存中'}</span><span>C11 · UTF-8 · WASI</span></div></section>
       <section className="console-panel panel"><div className="console-header"><Terminal size={16} /><strong>运行与测试</strong><button className="icon-button" aria-label="复制程序输出" onClick={() => void copyOutput()}><Copy size={14} /></button></div><div className="console-tabs" role="tablist">{(['output', 'errors', 'tests'] as const).map((key) => <button key={key} role="tab" aria-selected={tab === key} className={tab === key ? 'active' : ''} onClick={() => setTab(key)}>{{ output: '输出', errors: '问题', tests: '测试' }[key]}{key === 'errors' && result?.stderr && <span className="error-dot" />}</button>)}</div>
-        <div className="console-output" role="tabpanel">{running ? <div className="console-empty"><LoaderCircle size={26} className="spin" /><strong>{phase}</strong><p>首次加载工具需要一些时间。<br />后续运行会使用已缓存的资源。</p></div> : !result ? <div className="console-empty"><Terminal size={28} /><strong>让你的代码说话</strong><p>点击「运行」或按 Ctrl + Enter，<br />在这里查看程序输出。</p><span className="console-shortcut">Ctrl + Enter</span></div> : tab === 'output' ? <><span className={`run-state ${result.status === 'success' ? 'green' : 'warning'}`}>{result.status === 'success' ? <Check size={14} /> : <CircleAlert size={14} />}{({ success: '运行完成', 'compile-error': '编译失败', 'runtime-error': '运行失败', 'environment-error': '工具加载失败', timeout: '运行超时', cancelled: '已停止' })[result.status]}<small>{Math.round(result.durationMs)} ms</small></span><pre>{result.stdout || '（暂无标准输出）'}</pre></> : tab === 'errors' ? <><span className="console-section-label">编译器 / 标准错误</span><pre className={result.stderr ? 'error-output' : 'muted'}>{result.stderr || '没有编译或运行错误。'}</pre></> : <div className="test-result"><span className={`test-status ${testPassed ? 'green' : 'warning'}`}>{testPassed ? <Check size={19} /> : <CircleAlert size={19} />}{testPassed ? '样例测试通过 · 1/1' : resultInput !== lesson.stdin ? '自定义输入 · 未判定' : '样例测试未通过 · 0/1'}</span><p className="muted">MVP 使用样例输出检查；通过样例不代表覆盖全部边界情况。</p><label>预期输出</label><pre>{lesson.expectedOutput}</pre><label>实际输出</label><pre>{result.stdout || '（空）'}</pre>{resultInput !== lesson.stdin && <button className="secondary-button" onClick={() => setStdin(lesson.stdin)}>恢复样例输入</button>}</div>}</div>
+        <div className="console-output" role="tabpanel">{running ? <div className="console-empty"><LoaderCircle size={26} className="spin" /><strong>{phase}</strong><p>缓存读取、校验与初始化分别记录在下方诊断中。<br />缓存命中不需要重新下载。</p></div> : !result ? <div className="console-empty"><Terminal size={28} /><strong>让你的代码说话</strong><p>点击「运行」或按 Ctrl + Enter，<br />在这里查看程序输出。</p><span className="console-shortcut">Ctrl + Enter</span></div> : tab === 'output' ? <><span className={`run-state ${result.status === 'success' ? 'green' : 'warning'}`}>{result.status === 'success' ? <Check size={14} /> : <CircleAlert size={14} />}{({ success: '运行完成', 'compile-error': '编译失败', 'runtime-error': '运行失败', 'environment-error': '工具加载失败', timeout: '运行超时', cancelled: '已停止' })[result.status]}<small>{Math.round(result.durationMs)} ms</small></span><pre>{result.stdout || '（暂无标准输出）'}</pre></> : tab === 'errors' ? <><span className="console-section-label">编译器 / 标准错误</span><pre className={result.stderr ? 'error-output' : 'muted'}>{result.stderr || '没有编译或运行错误。'}</pre></> : <div className="test-result"><span className={`test-status ${testPassed ? 'green' : 'warning'}`}>{testPassed ? <Check size={19} /> : <CircleAlert size={19} />}{testPassed ? '样例测试通过 · 1/1' : resultInput !== lesson.stdin ? '自定义输入 · 未判定' : '样例测试未通过 · 0/1'}</span><p className="muted">MVP 使用样例输出检查；通过样例不代表覆盖全部边界情况。</p><label>预期输出</label><pre>{lesson.expectedOutput}</pre><label>实际输出</label><pre>{result.stdout || '（空）'}</pre>{resultInput !== lesson.stdin && <button className="secondary-button" onClick={() => setStdin(lesson.stdin)}>恢复样例输入</button>}</div>}</div>
         <div className="stdin-panel"><label htmlFor="stdin">标准输入 <small>STDIN</small></label><textarea id="stdin" aria-label="标准输入" placeholder="程序需要输入时，在这里填写…" value={stdin} onChange={(event) => setStdin(event.target.value)} /><label className="independent-check"><span><input type="checkbox" checked={independent} onChange={(event) => setIndependent(event.target.checked)} /> 本次练习由我独立完成</span><small>由你标记</small></label></div><div className="console-footer"><ShieldCheckSmall />在 WebAssembly 中运行</div></section>
       <TutorPanel lessonTitle={lesson.title} code={code} lastError={code === resultCode ? result?.stderr || (result?.status === 'timeout' ? '运行超时' : undefined) : undefined} output={code === resultCode ? result?.stdout : undefined} snapshot={snapshot} onUpdate={onUpdate} visible={chatVisible} onClose={() => setChatVisible(false)} />
-    </div>{notice && <div className="lab-notice" role="status"><CircleAlert size={14} /><span>{notice}</span></div>}
+    </div>
+    <div className="compiler-tools">{preparing ? <button className="secondary-button" onClick={cancelRun}>取消准备</button> : <button className="secondary-button" disabled={running} onClick={() => void prepare()}>提前准备编译环境</button>}<span role="status">{preparing ? phase : "可选操作：仅点击准备或运行时加载工具，不会在首页后台下载。"}</span></div>
+    <CompilerDiagnostics events={preparationEvents} timings={timings} />
+    {notice && <div className="lab-notice" role="status"><CircleAlert size={14} /><span>{notice}</span></div>}
     {dialog && <div className="modal-backdrop"><div role="dialog" aria-modal="true" aria-labelledby="dialog-title" className="modal"><span className="modal-icon"><RotateCcw size={25} /></span><h2 id="dialog-title">重置当前练习代码？</h2><p>当前草稿将恢复为课时初始代码。学习和错误记录会保留。</p><div className="modal-actions"><button className="secondary-button" onClick={() => setDialog(null)}>再想一想</button><button className="primary-button" onClick={() => { edit(lesson.starterCode); setDialog(null) }}>确认重置<ArrowRight size={15} /></button></div></div></div>}
   </div>
 }

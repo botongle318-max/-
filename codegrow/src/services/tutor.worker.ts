@@ -1,4 +1,5 @@
-import { WebWorkerMLCEngineHandler } from '@mlc-ai/web-llm'
+import { createLocalTutorWorkerHandler } from './localTutorWorker'
+import type { LocalTutorWorkerRequest } from './localTutorProtocol'
 
-const handler = new WebWorkerMLCEngineHandler()
-self.onmessage = (event: MessageEvent) => { void handler.onmessage(event) }
+const handle = createLocalTutorWorkerHandler(message => self.postMessage(message))
+self.onmessage = (event: MessageEvent<LocalTutorWorkerRequest>) => { void handle(event.data) }
